@@ -17,6 +17,7 @@ export interface ModuleProps {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
 }
 
@@ -39,6 +40,7 @@ export default class Module extends Component<ModuleProps> {
             showEasyServoSg90Data,
             showEasyStepperData,
             showEasyStepper28Byj48Data,
+            showAdvancedCodeSnippets,
             useAddressConstants,
         } = this.props;
         const category = module[categoryName];
@@ -57,6 +59,7 @@ export default class Module extends Component<ModuleProps> {
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}
                         showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                         focusedComponent={focusedComponent}
                         focusedRef={focusedRef}
                         useAddressConstants={useAddressConstants}
@@ -76,6 +79,7 @@ export default class Module extends Component<ModuleProps> {
                             showEasyServoSg90Data={showEasyServoSg90Data}
                             showEasyStepperData={showEasyStepperData}
                             showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                            showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                             focusedRef={focusedRef}
                             useAddressConstants={useAddressConstants}
                         />

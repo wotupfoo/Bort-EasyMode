@@ -1,3 +1,4 @@
+import { Divider } from '@mui/material';
 import { Component, ReactNode } from 'react';
 
 import Output from '../../../@types/Output';
@@ -43,12 +44,23 @@ export default class OutputSnippetBlock extends Component<OutputSnippetBlockProp
         if (output.description !== undefined) {
             yield <SnippetContainerHeaderItem title={'Description'}>{output.description}</SnippetContainerHeaderItem>;
         }
+        yield <Divider sx={{ margin: '1rem 0' }} />;
+        yield (
+            <SnippetContainerHeaderItem title={'Code Snippets'}>
+                Choose one of the following code snippets to subscribe to this telemetry.
+                <br />
+                Copy the snippet that
+                best matches your hardware into your application, then replace any placeholder pins or setup
+                values to match your project.
+            </SnippetContainerHeaderItem>
+        );
     }
 
     public render(): ReactNode {
         return (
             <SnippetContainer>
                 {[...this.headerText()]}
+                <Divider sx={{ margin: '1rem 0' }} />
                 {this.props.children}
             </SnippetContainer>
         );

@@ -6,13 +6,14 @@ import { StringSnippetProps } from './StringSnippetProps';
 
 export default class StringSnippetBlock extends Component<StringSnippetProps> {
     public render(): ReactNode {
-        const { controlIdentifier, output, useAddressConstants } = this.props;
+        const { controlIdentifier, output, showAdvancedCodeSnippets, useAddressConstants } = this.props;
 
         return (
             <OutputSnippetBlock output={output}>
                 <StringBufferSnippet
                     controlIdentifier={controlIdentifier}
                     output={output}
+                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                     useAddressConstants={useAddressConstants}
                 />
             </OutputSnippetBlock>

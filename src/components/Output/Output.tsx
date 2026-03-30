@@ -1,4 +1,4 @@
-import { Chip, Grid, Typography } from '@mui/material';
+import { Chip, Divider, Grid, Typography } from '@mui/material';
 import { Component, ReactNode } from 'react';
 
 import OutputItem from '../../@types/Output';
@@ -19,6 +19,7 @@ export interface OutputProps {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
     onIntegerUpdate: (v: number) => void;
     color?: string;
@@ -61,6 +62,7 @@ export default class Output extends Component<OutputProps> {
             showEasyServoSg90Data,
             showEasyStepperData,
             showEasyStepper28Byj48Data,
+            showAdvancedCodeSnippets,
             useAddressConstants,
         } = this.props;
         switch (output.type) {
@@ -75,6 +77,7 @@ export default class Output extends Component<OutputProps> {
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}
                         showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                         useAddressConstants={useAddressConstants}
                     />
                 );
@@ -83,6 +86,7 @@ export default class Output extends Component<OutputProps> {
                     <StringSnippetBlock
                         controlIdentifier={identifier}
                         output={output}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                         useAddressConstants={useAddressConstants}
                     />
                 );
@@ -155,6 +159,13 @@ export default class Output extends Component<OutputProps> {
                             {this.controlForInterface()}
                         </Grid>
                     </>
+                ) : (
+                    <></>
+                )}
+                {showLiveData && showArduinoData ? (
+                    <Grid item xs={12}>
+                        <Divider sx={{ margin: '0.5rem 0' }} />
+                    </Grid>
                 ) : (
                     <></>
                 )}

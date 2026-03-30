@@ -70,6 +70,7 @@ interface AppState {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
 }
 
@@ -86,6 +87,7 @@ export default class App extends Component<unknown, AppState> {
             showEasyServoSg90Data: true,
             showEasyStepperData: true,
             showEasyStepper28Byj48Data: true,
+            showAdvancedCodeSnippets: false,
             useAddressConstants: false,
         };
 
@@ -97,6 +99,7 @@ export default class App extends Component<unknown, AppState> {
         this.toggleShowEasyServoSg90Data = this.toggleShowEasyServoSg90Data.bind(this);
         this.toggleShowEasyStepperData = this.toggleShowEasyStepperData.bind(this);
         this.toggleShowEasyStepper28Byj48Data = this.toggleShowEasyStepper28Byj48Data.bind(this);
+        this.toggleShowAdvancedCodeSnippets = this.toggleShowAdvancedCodeSnippets.bind(this);
         this.toggleUseAddressConstants = this.toggleUseAddressConstants.bind(this);
     }
 
@@ -110,6 +113,7 @@ export default class App extends Component<unknown, AppState> {
             showEasyServoSg90Data: window.Main.getShowEasyServoSg90Data(),
             showEasyStepperData: window.Main.getShowEasyStepperData(),
             showEasyStepper28Byj48Data: window.Main.getShowEasyStepper28Byj48Data(),
+            showAdvancedCodeSnippets: window.Main.getShowAdvancedCodeSnippets(),
             useAddressConstants: window.Main.getUseAddressConstants(),
         });
     }
@@ -178,6 +182,14 @@ export default class App extends Component<unknown, AppState> {
         });
     }
 
+    private toggleShowAdvancedCodeSnippets() {
+        const newValue = !this.state.showAdvancedCodeSnippets;
+        window.Main.setShowAdvancedCodeSnippets(newValue);
+        this.setState({
+            showAdvancedCodeSnippets: newValue,
+        });
+    }
+
     private toggleUseAddressConstants() {
         const newValue = !this.state.useAddressConstants;
         window.Main.setUseAddressConstants(newValue);
@@ -196,6 +208,7 @@ export default class App extends Component<unknown, AppState> {
             showEasyServoSg90Data,
             showEasyStepperData,
             showEasyStepper28Byj48Data,
+            showAdvancedCodeSnippets,
             useAddressConstants,
         } = this.state;
         const theme = responsiveFontSizes(createTheme(getDesignTokens(mode)), {
@@ -226,6 +239,7 @@ export default class App extends Component<unknown, AppState> {
                         onShowEasyServoSg90DataToggle={this.toggleShowEasyServoSg90Data}
                         onShowEasyStepperDataToggle={this.toggleShowEasyStepperData}
                         onShowEasyStepper28Byj48DataToggle={this.toggleShowEasyStepper28Byj48Data}
+                        onShowAdvancedCodeSnippetsToggle={this.toggleShowAdvancedCodeSnippets}
                         onUseAddressConstantsToggle={this.toggleUseAddressConstants}
                         showLiveData={showLiveData}
                         showArduinoData={showArduinoData}
@@ -234,6 +248,7 @@ export default class App extends Component<unknown, AppState> {
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}
                         showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                         useAddressConstants={useAddressConstants}
                     />
                 </ThemeProvider>

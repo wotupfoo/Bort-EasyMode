@@ -9,5 +9,6 @@ export interface IntegerSnippetProps {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
 }

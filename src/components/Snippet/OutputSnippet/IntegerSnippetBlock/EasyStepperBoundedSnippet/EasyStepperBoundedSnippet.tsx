@@ -6,17 +6,32 @@ import { IntegerSnippetProps } from '../IntegerSnippetProps';
 
 export default class EasyStepperBoundedSnippet extends Component<IntegerSnippetProps> {
     public render(): ReactNode {
-        const { output, useAddressConstants } = this.props;
-        const source = (useAddressConstants && output.address_identifier) || Snippet.toHex(output.address);
+        const { controlIdentifier, output, useAddressConstants } = this.props;
+        const methodName = Snippet.snakeToCamelCase(controlIdentifier);
+        const useAddressIdentifier = useAddressConstants && !!output.address_identifier;
+        const source = (useAddressIdentifier && output.address_identifier) || Snippet.toHex(output.address);
 
         return (
             <Snippet>
-                DcsBios::EasyStepper altimeterNeedle(
-                {source}, <Variable>PIN1</Variable>, <Variable>PIN2</Variable>, <Variable>PIN3</Variable>,{' '}
-                <Variable>PIN4</Variable>, <Variable>0.0f</Variable>, <Variable>360.0f</Variable>,{' '}
-                <Variable>false</Variable>, <Variable>0.0f</Variable>, <Variable>6.0f</Variable>,{' '}
-                <Variable>12.0f</Variable>, <Variable>-1</Variable>, <Variable>true</Variable>,{' '}
-                <Variable>-1</Variable>, <Variable>0.0f</Variable>);
+                DcsBios::EasyStepper_Bounded {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {source}
+                {useAddressIdentifier
+                    ? ', // Telemetry source: altitude above mean sea level in feet\n    '
+                    : ',              // DCS World: memory address with the value\n    '}
+                <Variable>PIN1</Variable>
+                {',                      // Stepper driver input pin 1\n    '}
+                <Variable>PIN2</Variable>
+                {',                      // Stepper driver input pin 2\n    '}
+                <Variable>PIN3</Variable>
+                {',                      // Stepper driver input pin 3\n    '}
+                <Variable>PIN4</Variable>
+                {',                      // Stepper driver input pin 4\n    '}
+                <Variable>ZEROPIN</Variable>
+                {',                   // Zero angle detection input pin\n    '}
+                <Variable>true</Variable>
+                {'                      // Zero is in the middle of the range (true or false)\n);'}
             </Snippet>
         );
     }

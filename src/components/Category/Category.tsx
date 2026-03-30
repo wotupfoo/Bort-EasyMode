@@ -17,6 +17,7 @@ export interface CategoryProps {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
 }
 
@@ -39,6 +40,7 @@ export default class Category extends Component<CategoryProps> {
             showEasyServoSg90Data,
             showEasyStepperData,
             showEasyStepper28Byj48Data,
+            showAdvancedCodeSnippets,
             useAddressConstants,
         } = this.props;
         return (
@@ -59,6 +61,7 @@ export default class Category extends Component<CategoryProps> {
                                 showEasyServoSg90Data={showEasyServoSg90Data}
                                 showEasyStepperData={showEasyStepperData}
                                 showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                                showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                                 useAddressConstants={useAddressConstants}
                             />
                         </div>

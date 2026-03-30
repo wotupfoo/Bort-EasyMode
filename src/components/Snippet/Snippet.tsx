@@ -9,6 +9,7 @@ const snippetTheme: SxProps<Theme> = {
     borderWidth: '.1rem',
     borderStyle: 'solid',
     fontFamily: 'monospace',
+    whiteSpace: 'pre',
     position: 'relative',
     borderColor: theme => theme.palette.primary.dark,
     bgcolor: theme => theme.palette.grey['900'] + '22',

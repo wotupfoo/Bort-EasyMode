@@ -20,6 +20,7 @@ export interface ControlProps {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
     control: ControlItem;
 }
@@ -69,6 +70,7 @@ export default class Control extends Component<ControlProps, ControlState> {
             showEasyServoSg90Data,
             showEasyStepperData,
             showEasyStepper28Byj48Data,
+            showAdvancedCodeSnippets,
             useAddressConstants,
         } = this.props;
         const { value } = this.state;
@@ -122,6 +124,7 @@ export default class Control extends Component<ControlProps, ControlState> {
                                     showEasyServoSg90Data={showEasyServoSg90Data}
                                     showEasyStepperData={showEasyStepperData}
                                     showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                                     useAddressConstants={useAddressConstants}
                                     onIntegerUpdate={this.updateValue}
                                     color={control.color}
