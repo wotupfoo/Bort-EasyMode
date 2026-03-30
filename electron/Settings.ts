@@ -11,6 +11,7 @@ interface SettingsSchema {
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
     showEasyStepper28Byj48Data: boolean;
+    showAdvancedCodeSnippets: boolean;
     lastModule: string;
     lastCategory: string;
     alwaysOnTop: boolean;
@@ -37,6 +38,7 @@ export default class Settings {
                 showEasyServoSg90Data: true,
                 showEasyStepperData: true,
                 showEasyStepper28Byj48Data: true,
+                showAdvancedCodeSnippets: false,
                 lastModule: 'MetadataEnd',
                 lastCategory: 'Metadata',
                 alwaysOnTop: true,
@@ -126,6 +128,16 @@ export default class Settings {
     public set ShowEasyStepper28Byj48Data(newValue: boolean) {
         this.store.set({
             showEasyStepper28Byj48Data: newValue,
+        });
+    }
+
+    public get ShowAdvancedCodeSnippets(): boolean {
+        return this.store.get('showAdvancedCodeSnippets');
+    }
+
+    public set ShowAdvancedCodeSnippets(newValue: boolean) {
+        this.store.set({
+            showAdvancedCodeSnippets: newValue,
         });
     }
 

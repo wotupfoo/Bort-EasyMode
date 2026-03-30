@@ -7,7 +7,8 @@
     "private": true,
     "main": ".webpack/main",
     "scripts": {
-        "start": "electron-forge start",
+        "start": "cross-env BORT_VERBOSE=0 electron-forge start",
+        "start:verbose": "cross-env BORT_VERBOSE=1 electron-forge start",
         "package": "electron-forge package",
         "make": "electron-forge make",
         "release": "electron-forge publish",

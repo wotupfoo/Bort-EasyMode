@@ -1,3 +1,4 @@
+import * as dgram from 'dgram';
 import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItem } from 'electron';
 import Store from 'electron-store';
 import * as net from 'net';
@@ -7,20 +8,179 @@ import Settings from './Settings';
 
 let mainWindow: BrowserWindow | null;
 let isAlwaysOnTopChecked: boolean = Settings.Instance.AlwaysOnTop;
+let socketClient: net.Socket | null = null;
+let udpSocket: dgram.Socket | null = null;
+let udpConnected = false;
+let tcpConnected = false;
+let tcpWasConnectedOnce = false;
+let tcpFallbackTimer: ReturnType<typeof setTimeout> | null = null;
+
+const BIOS_HOST = '127.0.0.1';
+const BIOS_PORT = 7778;
+const TCP_FALLBACK_DELAY_MS = 1500;
+const VERBOSE_NETWORK_LOGGING = process.env.BORT_VERBOSE === '1';
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
-// const assetsPath =
-//   process.env.NODE_ENV === 'production'
-//     ? process.resourcesPath
-//     : app.getAppPath()
-
-let socketClient: net.Socket;
 let protocolParser: ProtocolParser;
+
+function logVerbose(message: string, ...args: unknown[]) {
+    if (!VERBOSE_NETWORK_LOGGING) return;
+    console.log(message, ...args);
+}
+
+function logNetworkStatus(reason: string) {
+    if (!VERBOSE_NETWORK_LOGGING) return;
+
+    const tcpState =
+        socketClient === null
+            ? 'none'
+            : socketClient.connecting
+              ? 'connecting'
+              : socketClient.destroyed
+                ? 'destroyed'
+                : tcpConnected
+                  ? 'connected'
+                  : 'idle';
+
+    console.log(
+        `[bort-net] ${reason} | udpListening=${udpSocket !== null} udpConnected=${udpConnected} tcp=${tcpState} connected=${connectedToBios} target=${BIOS_HOST}:${BIOS_PORT}`,
+    );
+}
+
+function processIncomingData(data: Uint8Array) {
+    for (const byte of data) {
+        protocolParser.processChar(byte);
+    }
+}
+
+function refreshConnectionState() {
+    connectedToBios = udpConnected || tcpConnected;
+    reportBiosStatus();
+    logNetworkStatus('state changed');
+}
+
+function clearTcpFallbackTimer() {
+    if (tcpFallbackTimer !== null) {
+        clearTimeout(tcpFallbackTimer);
+        tcpFallbackTimer = null;
+    }
+}
+
+function destroyTcpClient() {
+    clearTcpFallbackTimer();
+
+    if (socketClient !== null) {
+        socketClient.removeAllListeners();
+        socketClient.destroy();
+        socketClient = null;
+    }
+
+    tcpConnected = false;
+}
+
+function setupTcpClient() {
+    destroyTcpClient();
+
+    socketClient = new net.Socket();
+    socketClient.setNoDelay();
+    socketClient.on('connect', () => {
+        tcpConnected = true;
+        tcpWasConnectedOnce = true;
+        clearTcpFallbackTimer();
+        logVerbose(`connected to tcp dcs-bios on ${BIOS_HOST}:${BIOS_PORT}`);
+        refreshConnectionState();
+    });
+    socketClient.on('ready', () => {
+        logVerbose('tcp ready');
+    });
+    socketClient.on('data', data => {
+        // Prefer UDP telemetry if it is available.
+        if (udpConnected) return;
+        processIncomingData(data);
+    });
+    socketClient.on('end', () => {
+        logVerbose('disconnected from tcp server');
+        tcpConnected = false;
+        refreshConnectionState();
+    });
+    socketClient.on('error', err => {
+        logVerbose('error connecting to tcp server', err.message);
+        tcpConnected = false;
+        refreshConnectionState();
+    });
+}
+
+function connectToTcpSocket() {
+    if (tcpConnected) return;
+    if (socketClient === null || socketClient.destroyed) {
+        setupTcpClient();
+    }
+
+    logVerbose(`attempting tcp dcs-bios connection to ${BIOS_HOST}:${BIOS_PORT}`);
+    socketClient?.connect({ host: BIOS_HOST, port: BIOS_PORT });
+}
+
+function startUdpListener() {
+    if (udpSocket !== null) return;
+
+    udpSocket = dgram.createSocket('udp4');
+    udpSocket.on('listening', () => {
+        logVerbose(`listening for udp dcs-bios data on ${BIOS_HOST}:${BIOS_PORT}`);
+        logNetworkStatus('udp bind succeeded');
+    });
+    udpSocket.on('message', message => {
+        if (tcpWasConnectedOnce || tcpConnected) {
+            logVerbose('ignoring udp dcs-bios packet because tcp is the active transport');
+            return;
+        }
+
+        if (!udpConnected) {
+            udpConnected = true;
+            clearTcpFallbackTimer();
+            logVerbose(`received first udp dcs-bios packet on ${BIOS_HOST}:${BIOS_PORT}`);
+            refreshConnectionState();
+        }
+
+        processIncomingData(message);
+    });
+    udpSocket.on('error', err => {
+        logVerbose('error listening for udp dcs-bios data', err);
+        udpConnected = false;
+        refreshConnectionState();
+    });
+    udpSocket.on('close', () => {
+        logVerbose('udp dcs-bios listener closed');
+        udpConnected = false;
+        refreshConnectionState();
+    });
+    logVerbose(`attempting udp bind on ${BIOS_HOST}:${BIOS_PORT}`);
+    udpSocket.bind(BIOS_PORT, BIOS_HOST);
+}
+
+function tryUdpThenTcp() {
+    if (tcpWasConnectedOnce) {
+        logVerbose('tcp has connected before, skipping udp probe and keeping tcp as the preferred transport');
+        clearTcpFallbackTimer();
+        connectToTcpSocket();
+        return;
+    }
+
+    logVerbose(`trying udp first on ${BIOS_HOST}:${BIOS_PORT} with tcp fallback after ${TCP_FALLBACK_DELAY_MS}ms`);
+    startUdpListener();
+    clearTcpFallbackTimer();
+    tcpFallbackTimer = setTimeout(() => {
+        if (!udpConnected) {
+            logVerbose('no udp dcs-bios data received, falling back to tcp');
+            connectToTcpSocket();
+        }
+    }, TCP_FALLBACK_DELAY_MS);
+}
 
 function createWindow() {
     Store.initRenderer();
+    logVerbose('starting Bort network setup');
     mainWindow = new BrowserWindow({
         // icon: path.join(assetsPath, 'assets', 'icon.png'),
         width: 900,
@@ -115,42 +275,11 @@ function createWindow() {
         mainWindow?.webContents?.send(`receive-from-bios-${address}`, address, data);
     });
 
-    socketClient = new net.Socket();
-
-    socketClient.setNoDelay();
-    socketClient.on('connect', () => {
-        connectedToBios = true;
-        reportBiosStatus();
-    });
-    socketClient.on('ready', () => {
-        console.log('ready');
-    });
-    socketClient.on('data', data => {
-        const d = new DataView(data.buffer);
-        for (let i = 0; i < d.byteLength; i++) {
-            protocolParser.processChar(d.getUint8(i));
-        }
-    });
-    socketClient.on('end', () => {
-        console.log('disconnected from server');
-        connectedToBios = false;
-        reportBiosStatus();
-    });
-    socketClient.on('error', () => {
-        console.log('error connecting');
-        connectedToBios = false;
-        reportBiosStatus();
-    });
-
-    connectToSocket();
+    setupTcpClient();
+    tryUdpThenTcp();
 }
 
 let connectedToBios = false;
-
-function connectToSocket() {
-    /* Instance socket on create window */
-    socketClient.connect({ host: '127.0.0.1', port: 7778 });
-}
 
 function reportBiosStatus() {
     mainWindow?.webContents?.send('bios-connection-status', connectedToBios);
@@ -175,13 +304,33 @@ async function registerListeners() {
     });
 
     ipcMain.on('send-event', (_, message) => {
-        console.log('writing data to bios:', message);
-        socketClient?.write(rawStringToBuffer(message));
+        logVerbose('writing data to bios:', message);
+        const payload = rawStringToBuffer(message);
+
+        if (udpConnected && udpSocket !== null) {
+            logVerbose(`sending command via udp to ${BIOS_HOST}:${BIOS_PORT}`);
+            udpSocket.send(payload, BIOS_PORT, BIOS_HOST);
+            return;
+        }
+
+        logVerbose(`sending command via tcp to ${BIOS_HOST}:${BIOS_PORT}`);
+        socketClient?.write(payload);
     });
 
     ipcMain.on('retry-connection', () => {
-        console.log('attempting to reconnect...');
-        connectToSocket();
+        if (tcpConnected || tcpWasConnectedOnce) {
+            logVerbose('tcp is already established or preferred, skipping udp retry probe');
+            connectToTcpSocket();
+            refreshConnectionState();
+            return;
+        }
+
+        logVerbose('attempting to reconnect...');
+        udpConnected = false;
+        tcpConnected = false;
+        setupTcpClient();
+        tryUdpThenTcp();
+        refreshConnectionState();
     });
 
     ipcMain.on('poll-bios-connection', reportBiosStatus);
@@ -210,5 +359,8 @@ app.on('activate', () => {
 });
 
 app.on('before-quit', function () {
+    clearTcpFallbackTimer();
     socketClient?.end();
+    socketClient?.destroy();
+    udpSocket?.close();
 });

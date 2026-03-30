@@ -206,6 +206,14 @@ export const api = {
         Settings.Instance.ShowEasyStepper28Byj48Data = value;
     },
 
+    getShowAdvancedCodeSnippets: (): boolean => {
+        return Settings.Instance.ShowAdvancedCodeSnippets;
+    },
+
+    setShowAdvancedCodeSnippets: (value: boolean) => {
+        Settings.Instance.ShowAdvancedCodeSnippets = value;
+    },
+
     getUseAddressConstants: (): boolean => {
         return Settings.Instance.UseAddressConstants;
     },
