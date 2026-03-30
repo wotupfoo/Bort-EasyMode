@@ -37,9 +37,19 @@ export interface ControlReferenceProps {
     onThemeToggle: () => void;
     onShowLiveDataToggle: () => void;
     onShowArduinoCodeToggle: () => void;
+    onShowEasyModeDataToggle: () => void;
+    onShowEasyServoDataToggle: () => void;
+    onShowEasyServoSg90DataToggle: () => void;
+    onShowEasyStepperDataToggle: () => void;
+    onShowEasyStepper28Byj48DataToggle: () => void;
     onUseAddressConstantsToggle: () => void;
     showLiveData: boolean;
     showArduinoData: boolean;
+    showEasyModeData: boolean;
+    showEasyServoData: boolean;
+    showEasyServoSg90Data: boolean;
+    showEasyStepperData: boolean;
+    showEasyStepper28Byj48Data: boolean;
     useAddressConstants: boolean;
 }
 
@@ -300,9 +310,19 @@ export default class ControlReference extends Component<ControlReferenceProps, C
             onThemeToggle,
             onShowLiveDataToggle,
             onShowArduinoCodeToggle,
+            onShowEasyModeDataToggle,
+            onShowEasyServoDataToggle,
+            onShowEasyServoSg90DataToggle,
+            onShowEasyStepperDataToggle,
+            onShowEasyStepper28Byj48DataToggle,
             onUseAddressConstantsToggle,
             showLiveData,
             showArduinoData,
+            showEasyModeData,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
             useAddressConstants,
         } = this.props;
         const {
@@ -445,6 +465,66 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                     <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
                         <FormControlLabel
                             control={
+                                <Checkbox checked={showEasyModeData} onChange={onShowEasyModeDataToggle} name="easy" />
+                            }
+                            label="Show DCS-BIOS EasyMode examples"
+                        />
+                    </Grid>
+                    {showEasyModeData ? (
+                        <>
+                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={showEasyServoData}
+                                            onChange={onShowEasyServoDataToggle}
+                                            name="easy-servo"
+                                        />
+                                    }
+                                    label="Show generic servo examples"
+                                />
+                            </Grid>
+                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={showEasyServoSg90Data}
+                                            onChange={onShowEasyServoSg90DataToggle}
+                                            name="easy-servo-sg90"
+                                        />
+                                    }
+                                    label="Show SG90 servo examples"
+                                />
+                            </Grid>
+                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={showEasyStepperData}
+                                            onChange={onShowEasyStepperDataToggle}
+                                            name="easy-stepper"
+                                        />
+                                    }
+                                    label="Show generic stepper examples"
+                                />
+                            </Grid>
+                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={showEasyStepper28Byj48Data}
+                                            onChange={onShowEasyStepper28Byj48DataToggle}
+                                            name="easy-stepper-28byj48"
+                                        />
+                                    }
+                                    label="Show 28BYJ-48 stepper examples"
+                                />
+                            </Grid>
+                        </>
+                    ) : null}
+                    <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                        <FormControlLabel
+                            control={
                                 <Checkbox
                                     checked={useAddressConstants}
                                     onChange={onUseAddressConstantsToggle}
@@ -465,6 +545,11 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                                     focusedRef={focusedRef ?? undefined}
                                     showLiveData={showLiveData}
                                     showArduinoData={showArduinoData}
+                                    showEasyModeData={showEasyModeData}
+                                    showEasyServoData={showEasyServoData}
+                                    showEasyServoSg90Data={showEasyServoSg90Data}
+                                    showEasyStepperData={showEasyStepperData}
+                                    showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                                     useAddressConstants={useAddressConstants}
                                 />
                             ) : (

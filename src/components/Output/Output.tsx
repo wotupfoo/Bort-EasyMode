@@ -9,10 +9,16 @@ import IntegerOutput from './Integer/IntegerOutput';
 import StringOutput from './String/StringOutput';
 
 export interface OutputProps {
+    moduleName: string;
     identifier: string;
     output: OutputItem;
     showLiveData: boolean;
     showArduinoData: boolean;
+    showEasyModeData: boolean;
+    showEasyServoData: boolean;
+    showEasyServoSg90Data: boolean;
+    showEasyStepperData: boolean;
+    showEasyStepper28Byj48Data: boolean;
     useAddressConstants: boolean;
     onIntegerUpdate: (v: number) => void;
     color?: string;
@@ -46,13 +52,29 @@ export default class Output extends Component<OutputProps> {
     }
 
     private snippetForInterface(): ReactNode {
-        const { identifier, output, useAddressConstants } = this.props;
+        const {
+            moduleName,
+            identifier,
+            output,
+            showEasyModeData,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
+            useAddressConstants,
+        } = this.props;
         switch (output.type) {
             case OutputType.INTEGER:
                 return (
                     <IntegerSnippetBlock
+                        moduleName={moduleName}
                         controlIdentifier={identifier}
                         output={output}
+                        showEasyModeData={showEasyModeData}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                         useAddressConstants={useAddressConstants}
                     />
                 );

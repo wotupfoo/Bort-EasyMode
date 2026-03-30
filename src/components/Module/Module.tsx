@@ -12,6 +12,11 @@ export interface ModuleProps {
     focusedRef?: React.RefObject<HTMLDivElement>;
     showLiveData: boolean;
     showArduinoData: boolean;
+    showEasyModeData: boolean;
+    showEasyServoData: boolean;
+    showEasyServoSg90Data: boolean;
+    showEasyStepperData: boolean;
+    showEasyStepper28Byj48Data: boolean;
     useAddressConstants: boolean;
 }
 
@@ -29,6 +34,11 @@ export default class Module extends Component<ModuleProps> {
             focusedRef,
             showLiveData,
             showArduinoData,
+            showEasyModeData,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
             useAddressConstants,
         } = this.props;
         const category = module[categoryName];
@@ -42,6 +52,11 @@ export default class Module extends Component<ModuleProps> {
                         category={category}
                         showLiveData={showLiveData}
                         showArduinoData={showArduinoData}
+                        showEasyModeData={showEasyModeData}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                         focusedComponent={focusedComponent}
                         focusedRef={focusedRef}
                         useAddressConstants={useAddressConstants}
@@ -56,6 +71,11 @@ export default class Module extends Component<ModuleProps> {
                             focusedComponent={focusedComponent}
                             showLiveData={showLiveData}
                             showArduinoData={showArduinoData}
+                            showEasyModeData={showEasyModeData}
+                            showEasyServoData={showEasyServoData}
+                            showEasyServoSg90Data={showEasyServoSg90Data}
+                            showEasyStepperData={showEasyStepperData}
+                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                             focusedRef={focusedRef}
                             useAddressConstants={useAddressConstants}
                         />

@@ -65,6 +65,11 @@ interface AppState {
     mode: PaletteMode;
     showLiveData: boolean;
     showArduinoData: boolean;
+    showEasyModeData: boolean;
+    showEasyServoData: boolean;
+    showEasyServoSg90Data: boolean;
+    showEasyStepperData: boolean;
+    showEasyStepper28Byj48Data: boolean;
     useAddressConstants: boolean;
 }
 
@@ -76,12 +81,22 @@ export default class App extends Component<unknown, AppState> {
             mode: 'light',
             showLiveData: true,
             showArduinoData: false,
+            showEasyModeData: false,
+            showEasyServoData: true,
+            showEasyServoSg90Data: true,
+            showEasyStepperData: true,
+            showEasyStepper28Byj48Data: true,
             useAddressConstants: false,
         };
 
         this.toggleColorMode = this.toggleColorMode.bind(this);
         this.toggleShowLiveData = this.toggleShowLiveData.bind(this);
         this.toggleShowArduinoData = this.toggleShowArduinoData.bind(this);
+        this.toggleShowEasyModeData = this.toggleShowEasyModeData.bind(this);
+        this.toggleShowEasyServoData = this.toggleShowEasyServoData.bind(this);
+        this.toggleShowEasyServoSg90Data = this.toggleShowEasyServoSg90Data.bind(this);
+        this.toggleShowEasyStepperData = this.toggleShowEasyStepperData.bind(this);
+        this.toggleShowEasyStepper28Byj48Data = this.toggleShowEasyStepper28Byj48Data.bind(this);
         this.toggleUseAddressConstants = this.toggleUseAddressConstants.bind(this);
     }
 
@@ -90,6 +105,11 @@ export default class App extends Component<unknown, AppState> {
             mode: window.Main.getSettingsTheme(),
             showLiveData: window.Main.getShowLiveData(),
             showArduinoData: window.Main.getShowArduinoData(),
+            showEasyModeData: window.Main.getShowEasyModeData(),
+            showEasyServoData: window.Main.getShowEasyServoData(),
+            showEasyServoSg90Data: window.Main.getShowEasyServoSg90Data(),
+            showEasyStepperData: window.Main.getShowEasyStepperData(),
+            showEasyStepper28Byj48Data: window.Main.getShowEasyStepper28Byj48Data(),
             useAddressConstants: window.Main.getUseAddressConstants(),
         });
     }
@@ -118,6 +138,46 @@ export default class App extends Component<unknown, AppState> {
         });
     }
 
+    private toggleShowEasyModeData() {
+        const newValue = !this.state.showEasyModeData;
+        window.Main.setShowEasyModeData(newValue);
+        this.setState({
+            showEasyModeData: newValue,
+        });
+    }
+
+    private toggleShowEasyServoData() {
+        const newValue = !this.state.showEasyServoData;
+        window.Main.setShowEasyServoData(newValue);
+        this.setState({
+            showEasyServoData: newValue,
+        });
+    }
+
+    private toggleShowEasyServoSg90Data() {
+        const newValue = !this.state.showEasyServoSg90Data;
+        window.Main.setShowEasyServoSg90Data(newValue);
+        this.setState({
+            showEasyServoSg90Data: newValue,
+        });
+    }
+
+    private toggleShowEasyStepperData() {
+        const newValue = !this.state.showEasyStepperData;
+        window.Main.setShowEasyStepperData(newValue);
+        this.setState({
+            showEasyStepperData: newValue,
+        });
+    }
+
+    private toggleShowEasyStepper28Byj48Data() {
+        const newValue = !this.state.showEasyStepper28Byj48Data;
+        window.Main.setShowEasyStepper28Byj48Data(newValue);
+        this.setState({
+            showEasyStepper28Byj48Data: newValue,
+        });
+    }
+
     private toggleUseAddressConstants() {
         const newValue = !this.state.useAddressConstants;
         window.Main.setUseAddressConstants(newValue);
@@ -127,7 +187,17 @@ export default class App extends Component<unknown, AppState> {
     }
 
     public render() {
-        const { mode, showLiveData, showArduinoData, useAddressConstants } = this.state;
+        const {
+            mode,
+            showLiveData,
+            showArduinoData,
+            showEasyModeData,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
+            useAddressConstants,
+        } = this.state;
         const theme = responsiveFontSizes(createTheme(getDesignTokens(mode)), {
             factor: 5,
         });
@@ -151,9 +221,19 @@ export default class App extends Component<unknown, AppState> {
                         onThemeToggle={this.toggleColorMode}
                         onShowLiveDataToggle={this.toggleShowLiveData}
                         onShowArduinoCodeToggle={this.toggleShowArduinoData}
+                        onShowEasyModeDataToggle={this.toggleShowEasyModeData}
+                        onShowEasyServoDataToggle={this.toggleShowEasyServoData}
+                        onShowEasyServoSg90DataToggle={this.toggleShowEasyServoSg90Data}
+                        onShowEasyStepperDataToggle={this.toggleShowEasyStepperData}
+                        onShowEasyStepper28Byj48DataToggle={this.toggleShowEasyStepper28Byj48Data}
                         onUseAddressConstantsToggle={this.toggleUseAddressConstants}
                         showLiveData={showLiveData}
                         showArduinoData={showArduinoData}
+                        showEasyModeData={showEasyModeData}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                         useAddressConstants={useAddressConstants}
                     />
                 </ThemeProvider>

@@ -15,6 +15,11 @@ export interface ControlProps {
     moduleName: string;
     showLiveData: boolean;
     showArduinoData: boolean;
+    showEasyModeData: boolean;
+    showEasyServoData: boolean;
+    showEasyServoSg90Data: boolean;
+    showEasyStepperData: boolean;
+    showEasyStepper28Byj48Data: boolean;
     useAddressConstants: boolean;
     control: ControlItem;
 }
@@ -54,7 +59,18 @@ export default class Control extends Component<ControlProps, ControlState> {
     }
 
     public render(): ReactNode {
-        const { moduleName, control, showLiveData, showArduinoData, useAddressConstants } = this.props;
+        const {
+            moduleName,
+            control,
+            showLiveData,
+            showArduinoData,
+            showEasyModeData,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
+            useAddressConstants,
+        } = this.props;
         const { value } = this.state;
         const hasInputs = control.inputs.length > 0;
         const hasOutputs = control.outputs.length > 0;
@@ -95,11 +111,17 @@ export default class Control extends Component<ControlProps, ControlState> {
                         <IOContainer text={'Output'}>
                             {control.outputs.map(x => (
                                 <Output
+                                    moduleName={moduleName}
                                     identifier={control.identifier}
                                     output={x}
                                     key={x.type}
                                     showLiveData={showLiveData}
                                     showArduinoData={showArduinoData}
+                                    showEasyModeData={showEasyModeData}
+                                    showEasyServoData={showEasyServoData}
+                                    showEasyServoSg90Data={showEasyServoSg90Data}
+                                    showEasyStepperData={showEasyStepperData}
+                                    showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                                     useAddressConstants={useAddressConstants}
                                     onIntegerUpdate={this.updateValue}
                                     color={control.color}

@@ -166,6 +166,46 @@ export const api = {
         Settings.Instance.ShowArduinoData = value;
     },
 
+    getShowEasyModeData: (): boolean => {
+        return Settings.Instance.ShowEasyModeData;
+    },
+
+    setShowEasyModeData: (value: boolean) => {
+        Settings.Instance.ShowEasyModeData = value;
+    },
+
+    getShowEasyServoData: (): boolean => {
+        return Settings.Instance.ShowEasyServoData;
+    },
+
+    setShowEasyServoData: (value: boolean) => {
+        Settings.Instance.ShowEasyServoData = value;
+    },
+
+    getShowEasyServoSg90Data: (): boolean => {
+        return Settings.Instance.ShowEasyServoSg90Data;
+    },
+
+    setShowEasyServoSg90Data: (value: boolean) => {
+        Settings.Instance.ShowEasyServoSg90Data = value;
+    },
+
+    getShowEasyStepperData: (): boolean => {
+        return Settings.Instance.ShowEasyStepperData;
+    },
+
+    setShowEasyStepperData: (value: boolean) => {
+        Settings.Instance.ShowEasyStepperData = value;
+    },
+
+    getShowEasyStepper28Byj48Data: (): boolean => {
+        return Settings.Instance.ShowEasyStepper28Byj48Data;
+    },
+
+    setShowEasyStepper28Byj48Data: (value: boolean) => {
+        Settings.Instance.ShowEasyStepper28Byj48Data = value;
+    },
+
     getUseAddressConstants: (): boolean => {
         return Settings.Instance.UseAddressConstants;
     },

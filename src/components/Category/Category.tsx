@@ -12,6 +12,11 @@ export interface CategoryProps {
     focusedRef?: React.RefObject<HTMLDivElement>;
     showLiveData: boolean;
     showArduinoData: boolean;
+    showEasyModeData: boolean;
+    showEasyServoData: boolean;
+    showEasyServoSg90Data: boolean;
+    showEasyStepperData: boolean;
+    showEasyStepper28Byj48Data: boolean;
     useAddressConstants: boolean;
 }
 
@@ -29,6 +34,11 @@ export default class Category extends Component<CategoryProps> {
             focusedRef,
             showLiveData,
             showArduinoData,
+            showEasyModeData,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
             useAddressConstants,
         } = this.props;
         return (
@@ -44,6 +54,11 @@ export default class Category extends Component<CategoryProps> {
                                 key={e[1].identifier}
                                 showLiveData={showLiveData}
                                 showArduinoData={showArduinoData}
+                                showEasyModeData={showEasyModeData}
+                                showEasyServoData={showEasyServoData}
+                                showEasyServoSg90Data={showEasyServoSg90Data}
+                                showEasyStepperData={showEasyStepperData}
+                                showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                                 useAddressConstants={useAddressConstants}
                             />
                         </div>
