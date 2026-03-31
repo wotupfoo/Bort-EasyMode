@@ -5,7 +5,7 @@
 
 ![](https://static.wikia.nocookie.net/simpsons/images/4/41/Bort_boy.png)
 
-Bort-EasyMode (Bios Reference Tool) is a standalone Electron app for browsing
+Bort-EasyMode (DCS-<u>B</u>i<u>o</u>s <u>R</u>eference <u>T</u>ool) is a standalone Electron app for browsing
 DCS-BIOS data and generating Easy Mode-oriented snippets and reference output.
 
 It began as a fork of the original Bort project and has been adapted into its
