@@ -180,7 +180,7 @@ function tryUdpThenTcp() {
 
 function createWindow() {
     Store.initRenderer();
-    logVerbose('starting Bort network setup');
+    logVerbose('starting Bort-EasyMode network setup');
     mainWindow = new BrowserWindow({
         // icon: path.join(assetsPath, 'assets', 'icon.png'),
         width: 900,
@@ -243,7 +243,7 @@ function createWindow() {
                         const packageInfo = require('../package.json');
                         dialog
                             .showMessageBox({
-                                message: `Bort version: ${ packageInfo.version }`
+                                message: `Bort-EasyMode version: ${ packageInfo.version }`
                             })
                             // should always handle the error yourself, later Electron release might crash if you don't
                             .catch(function (err) {

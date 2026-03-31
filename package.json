@@ -1,11 +1,19 @@
 {
-    "name": "bort",
-    "author": "charlie",
+    "name": "bort-easymode",
+    "author": "WotUpFoo",
     "productName": "Bort-EasyMode",
     "version": "0.1.0",
-    "description": "A tool for sending data to and viewing data from DCS-BIOS.",
+    "description": "A standalone reference and code-generation tool for DCS-BIOS Easy Mode.",
     "private": true,
     "main": ".webpack/main",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/WotUpFoo/Bort-EasyMode.git"
+    },
+    "homepage": "https://github.com/WotUpFoo/Bort-EasyMode",
+    "bugs": {
+        "url": "https://github.com/WotUpFoo/Bort-EasyMode/issues"
+    },
     "scripts": {
         "start": "cross-env BORT_VERBOSE=0 electron-forge start",
         "start:verbose": "cross-env BORT_VERBOSE=1 electron-forge start",
@@ -81,8 +89,8 @@
     "config": {
         "forge": {
             "packagerConfig": {
-                "name": "bort",
-                "executableName": "bort",
+                "name": "bort-easymode",
+                "executableName": "bort-easymode",
                 "icon": "assets/icon",
                 "extraResource": [
                     "assets"
@@ -115,8 +123,8 @@
                 {
                     "name": "@electron-forge/maker-squirrel",
                     "config": {
-                        "name": "bort",
-                        "executableName": "bort",
+                        "name": "bort-easymode",
+                        "executableName": "bort-easymode",
                         "setupExe": "Bort-EasyMode-0.1.0 Setup.exe"
                     }
                 },
@@ -140,8 +148,8 @@
                     "name": "@electron-forge/publisher-github",
                     "config": {
                         "repository": {
-                            "owner": "charliefoxtwo",
-                            "name": "dcs-bios-ui"
+                            "owner": "WotUpFoo",
+                            "name": "Bort-EasyMode"
                         }
                     }
                 }
