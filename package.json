@@ -2,7 +2,7 @@
     "name": "bort-easymode",
     "author": "WotUpFoo",
     "productName": "Bort-EasyMode",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "A standalone reference and code-generation tool for DCS-BIOS Easy Mode.",
     "private": true,
     "main": ".webpack/main",
@@ -10,7 +10,7 @@
         "type": "git",
         "url": "https://github.com/WotUpFoo/Bort-EasyMode.git"
     },
-    "homepage": "https://github.com/WotUpFoo/Bort-EasyMode",
+    "homepage": "https://github.com/WotUpFoo/Bort-EasyMode/releases/latest",
     "bugs": {
         "url": "https://github.com/WotUpFoo/Bort-EasyMode/issues"
     },
@@ -125,7 +125,7 @@
                     "config": {
                         "name": "bort-easymode",
                         "executableName": "bort-easymode",
-                        "setupExe": "Bort-EasyMode-0.1.0 Setup.exe"
+                        "setupExe": "Bort-EasyMode-0.2.0 Setup.exe"
                     }
                 },
                 {

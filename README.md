@@ -9,6 +9,10 @@ Bort-EasyMode (BiOs Reference Tool) is a standalone Windows app for browsing
 DCS airplane data and generating Easy Mode-oriented snippets and reference output.
 The snippets of code are used with the [DCS-BIOS Easy Mode Arduino Library](https://github.com/wotupfoo/dcs-bios-arduino-easymode/releases) to create sim-pit panels.
 
+If you just want to install Bort-EasyMode, go to the
+[Releases page](https://github.com/wotupfoo/Bort-EasyMode/releases/latest).
+Most users do not need the source code view on GitHub.
+
 It began as a fork of the original BORT project and has been adapted into its
 own Easy Mode-focused distribution for use with the DCS-BIOS Easy Mode Arduino
 library.
@@ -25,9 +29,12 @@ Bort-EasyMode builds on that platform, but focuses on the Easy Mode library work
 
 ## Installation
 
-Download and run the setup for the [latest
-release](https://github.com/wotupfoo/Bort-EasyMode/releases/latest) for your
-operating system.
+If you want to install the app, use the
+[latest release](https://github.com/wotupfoo/Bort-EasyMode/releases/latest).
+
+Do not use the green `Code` button unless you want the source code.
+
+Download and run the setup from the latest release for your operating system.
 
 ## Usage
 
