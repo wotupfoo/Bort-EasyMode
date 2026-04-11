@@ -6,7 +6,6 @@ interface SettingsSchema {
     jsonPath: string;
     showLiveData: boolean;
     showArduinoData: boolean;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -33,10 +32,9 @@ export default class Settings {
                 ),
                 showLiveData: true,
                 showArduinoData: false,
-                showEasyModeData: false,
-                showEasyServoData: true,
+                showEasyServoData: false,
                 showEasyServoSg90Data: true,
-                showEasyStepperData: true,
+                showEasyStepperData: false,
                 showEasyStepper28Byj48Data: true,
                 showAdvancedCodeSnippets: false,
                 lastModule: 'MetadataEnd',
@@ -78,16 +76,6 @@ export default class Settings {
     public set ShowArduinoData(newValue: boolean) {
         this.store.set({
             showArduinoData: newValue,
-        });
-    }
-
-    public get ShowEasyModeData(): boolean {
-        return this.store.get('showEasyModeData');
-    }
-
-    public set ShowEasyModeData(newValue: boolean) {
-        this.store.set({
-            showEasyModeData: newValue,
         });
     }
 

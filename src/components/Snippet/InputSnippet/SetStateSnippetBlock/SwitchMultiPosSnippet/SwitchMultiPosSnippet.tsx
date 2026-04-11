@@ -23,7 +23,15 @@ export default class SwitchMultiPosSnippet extends Component<SwitchMultiPosSnipp
             <Snippet>
                 const byte {pinArrayName}[{pinArraySize}] = &#123;{pinArray}&#125;;
                 <br />
-                DcsBios::SwitchMultiPos {methodName}({`"${controlIdentifier}"`}, {pinArrayName}, {pinArraySize});
+                DcsBios::EasyMode::SwitchMultiPos {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                {pinArrayName}
+                {', // Array of Arduino pins, one for each switch position\n    '}
+                {pinArraySize}
+                {'                 // Number of entries in the pin array\n);'}
             </Snippet>
         );
     }

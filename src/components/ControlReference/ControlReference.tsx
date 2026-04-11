@@ -37,7 +37,6 @@ export interface ControlReferenceProps {
     onThemeToggle: () => void;
     onShowLiveDataToggle: () => void;
     onShowArduinoCodeToggle: () => void;
-    onShowEasyModeDataToggle: () => void;
     onShowEasyServoDataToggle: () => void;
     onShowEasyServoSg90DataToggle: () => void;
     onShowEasyStepperDataToggle: () => void;
@@ -46,7 +45,6 @@ export interface ControlReferenceProps {
     onUseAddressConstantsToggle: () => void;
     showLiveData: boolean;
     showArduinoData: boolean;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -104,9 +102,11 @@ const disconnectedPulsar = buildPulsar(255, 103, 97);
 export default class ControlReference extends Component<ControlReferenceProps, ControlReferenceState> {
     private awaitingConnectionAttempt = false;
     private parser?: StringParser;
+    private stickyControlsRef: React.RefObject<HTMLDivElement>;
 
     public constructor(props: ControlReferenceProps) {
         super(props);
+        this.stickyControlsRef = React.createRef();
 
         this.state = {
             moduleNames: [],
@@ -290,6 +290,7 @@ export default class ControlReference extends Component<ControlReferenceProps, C
 
     private searchBoxChanged(event: React.SyntheticEvent, value: AutoCompleteOption | null) {
         if (value !== null) {
+            window.Main.setLastCategory(value.control.category);
             const ref: React.RefObject<HTMLDivElement> = React.createRef();
             this.setState(
                 {
@@ -298,9 +299,14 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                     focusedRef: ref,
                 },
                 () => {
-                    if (ref.current !== null) {
-                        ref.current.scrollIntoView({ behavior: 'smooth' });
-                    }
+                    window.requestAnimationFrame(() => {
+                        const target = ref.current;
+                        if (target !== null) {
+                            const stickyHeight = this.stickyControlsRef.current?.getBoundingClientRect().height ?? 0;
+                            const targetTop = target.getBoundingClientRect().top + window.scrollY - stickyHeight - 12;
+                            window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
+                        }
+                    });
                 },
             );
         }
@@ -312,7 +318,6 @@ export default class ControlReference extends Component<ControlReferenceProps, C
             onThemeToggle,
             onShowLiveDataToggle,
             onShowArduinoCodeToggle,
-            onShowEasyModeDataToggle,
             onShowEasyServoDataToggle,
             onShowEasyServoSg90DataToggle,
             onShowEasyStepperDataToggle,
@@ -321,7 +326,6 @@ export default class ControlReference extends Component<ControlReferenceProps, C
             onUseAddressConstantsToggle,
             showLiveData,
             showArduinoData,
-            showEasyModeData,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -350,8 +354,9 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                 sx={{
                     bgcolor: theme => theme.palette.background.default,
                     color: theme => theme.palette.text.primary,
-                    height: '100vh',
+                    minHeight: '100vh',
                     paddingTop: '1rem',
+                    paddingBottom: '1rem',
                 }}
             >
                 <Grid container sx={{ alignItems: 'center' }} spacing={2}>
@@ -376,7 +381,7 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                             {theme === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
                         </IconButton>
                     </Grid>
-                    <Grid xs={12} sm={4}>
+                    <Grid xs={12} sm={4} sx={{ display: 'none' }}>
                         <FormControl fullWidth>
                             <InputLabel>Module</InputLabel>
                             <Select value={activeModule} label={'Module'} onChange={this.changeModule}>
@@ -388,7 +393,7 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid xs={12} sm={8}>
+                    <Grid xs={12} sm={8} sx={{ display: 'none' }}>
                         <FormControl fullWidth>
                             <InputLabel>Category</InputLabel>
                             <Select value={activeCategory} label={'Category'} onChange={this.changeCategory}>
@@ -407,10 +412,9 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid xs={12}>
+                    <Grid xs={12} sx={{ display: 'none' }}>
                         <FormControl fullWidth>
                             <Autocomplete
-                                disablePortal
                                 options={
                                     module === undefined
                                         ? []
@@ -425,7 +429,7 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                                 renderInput={params => (
                                     <TextField {...params} type={'search'} label={'Search'} variant={'outlined'} />
                                 )}
-                                renderOption={(props, option, state) => (
+                                renderOption={(props, option) => (
                                     <Box component={'li'} {...props}>
                                         <Box component={'span'} sx={{ width: '2rem' }}>
                                             {option.control.outputs.filter(o => o.type === OutputType.STRING).length >
@@ -452,109 +456,217 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                             />
                         </FormControl>
                     </Grid>
-                    <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
-                        <FormControlLabel
-                            control={<Checkbox checked={showLiveData} onChange={onShowLiveDataToggle} name="live" />}
-                            label="Show live data"
-                        />
-                    </Grid>
-                    <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={showArduinoData} onChange={onShowArduinoCodeToggle} name="arduino" />
-                            }
-                            label="Show arduino scaffold code"
-                        />
-                    </Grid>
-                    {showArduinoData ? (
-                        <Grid xs={12}>
+                    <Grid xs={12}>
+                        <Box
+                            ref={this.stickyControlsRef}
+                            sx={{
+                                position: 'sticky',
+                                top: 0,
+                                zIndex: theme => theme.zIndex.appBar - 1,
+                                bgcolor: theme => theme.palette.background.paper,
+                                borderStyle: 'solid',
+                                borderWidth: '1px',
+                                borderColor: theme => theme.palette.primary.main,
+                                borderRadius: '1rem',
+                                padding: '0.75rem',
+                                boxShadow: theme => `0 0.5rem 1rem ${theme.palette.primary.main}22`,
+                                maxHeight: 'calc(100vh - 0.75rem)',
+                                overflowY: 'auto',
+                            }}
+                        >
+                            <Grid container spacing={1}>
+                                <Grid xs={12} sm={4}>
+                                    <FormControl fullWidth size="small">
+                                        <InputLabel>Module</InputLabel>
+                                        <Select value={activeModule} label={'Module'} onChange={this.changeModule}>
+                                            {moduleNames.map(m => (
+                                                <MenuItem value={m} key={m}>
+                                                    {m}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid xs={12} sm={8}>
+                                    <FormControl fullWidth size="small">
+                                        <InputLabel>Category</InputLabel>
+                                        <Select value={activeCategory} label={'Category'} onChange={this.changeCategory}>
+                                            {hasModule
+                                                ? [
+                                                      <MenuItem value={'ALL'} key={-1}>
+                                                          {'âš ï¸ Show all'}
+                                                      </MenuItem>,
+                                                      ...Object.entries(module).map(m => (
+                                                          <MenuItem value={m[0]} key={m[0]}>
+                                                              {m[0]}
+                                                          </MenuItem>
+                                                      )),
+                                                  ]
+                                                : []}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid xs={12}>
+                                    <FormControl fullWidth size="small">
+                                        <Autocomplete
+                                            options={
+                                                module === undefined
+                                                    ? []
+                                                    : Object.entries(module).flatMap(e =>
+                                                          Object.values(e[1]).map(control => ({
+                                                              label: control.description,
+                                                              control: control,
+                                                          })),
+                                                      )
+                                            }
+                                            groupBy={option => option.control.category}
+                                            renderInput={params => (
+                                                <TextField
+                                                    {...params}
+                                                    type={'search'}
+                                                    label={'Search'}
+                                                    variant={'outlined'}
+                                                    size="small"
+                                                />
+                                            )}
+                                            renderOption={(props, option) => (
+                                                <Box component={'li'} {...props}>
+                                                    <Box component={'span'} sx={{ width: '2rem' }}>
+                                                        {option.control.outputs.filter(o => o.type === OutputType.STRING)
+                                                            .length > 0 ? (
+                                                            <Translate />
+                                                        ) : (
+                                                            (option.control.inputs.length > 0 ||
+                                                                option.control.outputs.filter(
+                                                                    o => o.type === OutputType.INTEGER,
+                                                                ).length > 0) && <Pin />
+                                                        )}
+                                                    </Box>
+                                                    <Box component={'span'} sx={{ width: '2rem' }}>
+                                                        {option.control.inputs.length > 0 && <Edit />}
+                                                    </Box>
+                                                    <pre> {option.control.identifier} </pre>
+                                                    {option.control.description}
+                                                </Box>
+                                            )}
+                                            blurOnSelect
+                                            clearOnBlur
+                                            selectOnFocus
+                                            onChange={this.searchBoxChanged}
+                                            isOptionEqualToValue={(a, b) => a.control.identifier === b.control.identifier}
+                                        />
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
                             <Box
                                 sx={{
-                                    borderStyle: 'solid',
-                                    borderWidth: '1px',
-                                    borderColor: theme => theme.palette.primary.main,
-                                    borderRadius: '1rem',
-                                    padding: '1rem',
+                                    marginTop: '0.75rem',
+                                    paddingTop: '0.75rem',
+                                    borderTop: theme => `1px solid ${theme.palette.primary.main}`,
                                 }}
                             >
-                                <Typography
-                                    variant={'h6'}
-                                    sx={{ marginBottom: '0.5rem', fontWeight: theme => theme.typography.fontWeightBold }}
-                                >
-                                    Code Snippets
-                                </Typography>
-                                <Grid container spacing={2}>
-                                    <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={showEasyModeData}
-                                                    onChange={onShowEasyModeDataToggle}
-                                                    name="easy"
-                                                />
-                                            }
-                                            label="Show DCS-BIOS EasyMode"
-                                        />
-                                    </Grid>
-                                    <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={useAddressConstants}
-                                                    onChange={onUseAddressConstantsToggle}
-                                                    name="constants"
-                                                />
-                                            }
-                                            label="Show the Text name of the address constants"
-                                        />
-                                    </Grid>
-                                    <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={showAdvancedCodeSnippets}
-                                                    onChange={onShowAdvancedCodeSnippetsToggle}
-                                                    name="advanced-code-snippets"
-                                                />
-                                            }
-                                            label="Show Advanced Examples"
-                                        />
-                                    </Grid>
+                            <Grid container spacing={1}>
+                                <Grid xs={12} md={6}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox checked={showLiveData} onChange={onShowLiveDataToggle} name="live" />
+                                        }
+                                        label="Show live data"
+                                        sx={{ my: -0.25 }}
+                                    />
                                 </Grid>
-                                {showEasyModeData ? (
+                                <Grid
+                                    xs={12}
+                                    md={6}
+                                    sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+                                >
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={showArduinoData}
+                                                onChange={onShowArduinoCodeToggle}
+                                                name="arduino"
+                                            />
+                                        }
+                                        label="Show DCS-BIOS Easy Mode Scaffolding Code"
+                                        sx={{ my: -0.25 }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            {showArduinoData ? (
+                                <Box
+                                    sx={{
+                                        borderStyle: 'solid',
+                                        borderWidth: '1px',
+                                        borderColor: theme => theme.palette.primary.main,
+                                        borderRadius: '1rem',
+                                        padding: '0.75rem',
+                                        marginTop: '0.75rem',
+                                    }}
+                                >
+                                    <Typography
+                                        variant={'h6'}
+                                        sx={{ marginBottom: '0.25rem', fontWeight: theme => theme.typography.fontWeightBold }}
+                                    >
+                                        DCS-BIOS Easy Mode Code Snippets
+                                    </Typography>
+                                    <Grid container spacing={1}>
+                                        <Grid xs={12} md={6}>
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={useAddressConstants}
+                                                        onChange={onUseAddressConstantsToggle}
+                                                        name="constants"
+                                                    />
+                                                }
+                                                label={
+                                                    <Typography noWrap>
+                                                        Show DCS-BIOS telemetry channel names instead of raw hex addresses
+                                                    </Typography>
+                                                }
+                                                sx={{ my: -0.25 }}
+                                            />
+                                        </Grid>
+                                        <Grid
+                                            xs={12}
+                                            md={6}
+                                            sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+                                        >
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={showAdvancedCodeSnippets}
+                                                        onChange={onShowAdvancedCodeSnippetsToggle}
+                                                        name="advanced-code-snippets"
+                                                    />
+                                                }
+                                                label="Show Advanced Examples"
+                                                sx={{ my: -0.25 }}
+                                            />
+                                        </Grid>
+                                    </Grid>
                                     <Box
                                         sx={{
                                             borderStyle: 'solid',
                                             borderWidth: '1px',
                                             borderColor: theme => theme.palette.primary.main,
                                             borderRadius: '1rem',
-                                            padding: '1rem',
-                                            marginTop: '1rem',
+                                            padding: '0.75rem',
+                                            marginTop: '0.75rem',
                                         }}
                                     >
                                         <Typography
                                             variant={'h6'}
                                             sx={{
-                                                marginBottom: '0.5rem',
+                                                marginBottom: '0.25rem',
                                                 fontWeight: theme => theme.typography.fontWeightBold,
                                             }}
                                         >
-                                            DCS-BIOS Easy Mode
+                                            Easy Mode Motor Output Snippets
                                         </Typography>
-                                        <Grid container spacing={2}>
-                                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
-                                                <FormControlLabel
-                                                    control={
-                                                        <Checkbox
-                                                            checked={showEasyServoData}
-                                                            onChange={onShowEasyServoDataToggle}
-                                                            name="easy-servo"
-                                                        />
-                                                    }
-                                                    label="Show Generic Servo Code Snippets"
-                                                />
-                                            </Grid>
-                                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                        <Grid container spacing={1}>
+                                            <Grid xs={12} md={6}>
                                                 <FormControlLabel
                                                     control={
                                                         <Checkbox
@@ -564,21 +676,27 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                                                         />
                                                     }
                                                     label="Show SG90 Servo Code Snippets"
+                                                    sx={{ my: -0.25 }}
                                                 />
                                             </Grid>
-                                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                            <Grid
+                                                xs={12}
+                                                md={6}
+                                                sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+                                            >
                                                 <FormControlLabel
                                                     control={
                                                         <Checkbox
-                                                            checked={showEasyStepperData}
-                                                            onChange={onShowEasyStepperDataToggle}
-                                                            name="easy-stepper"
+                                                            checked={showEasyServoData}
+                                                            onChange={onShowEasyServoDataToggle}
+                                                            name="easy-servo"
                                                         />
                                                     }
-                                                    label="Show Generic Stepper Motor Code Snippets"
+                                                    label="Show Generic Servo Code Snippets"
+                                                    sx={{ my: -0.25 }}
                                                 />
                                             </Grid>
-                                            <Grid xs={12} sm={6} md={4} lg={3} xl={2}>
+                                            <Grid xs={12} md={6}>
                                                 <FormControlLabel
                                                     control={
                                                         <Checkbox
@@ -588,59 +706,77 @@ export default class ControlReference extends Component<ControlReferenceProps, C
                                                         />
                                                     }
                                                     label="Show 28BYJ-48 Stepper Motor Code Snippets"
+                                                    sx={{ my: -0.25 }}
+                                                />
+                                            </Grid>
+                                            <Grid
+                                                xs={12}
+                                                md={6}
+                                                sx={{ display: 'flex', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}
+                                            >
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            checked={showEasyStepperData}
+                                                            onChange={onShowEasyStepperDataToggle}
+                                                            name="easy-stepper"
+                                                        />
+                                                    }
+                                                    label="Show Generic Stepper Motor Code Snippets"
+                                                    sx={{ my: -0.25 }}
                                                 />
                                             </Grid>
                                         </Grid>
                                     </Box>
-                                ) : null}
-                            </Box>
-                        </Grid>
-                    ) : null}
-                    <Grid xs={12}>
-                        {hasLoadedModules ? (
-                            module ? (
-                                <Module
-                                    module={module}
-                                    moduleName={activeModule}
-                                    categoryName={activeCategory}
-                                    focusedComponent={focusedComponent ?? undefined}
-                                    focusedRef={focusedRef ?? undefined}
-                                    showLiveData={showLiveData}
-                                    showArduinoData={showArduinoData}
-                                    showEasyModeData={showEasyModeData}
-                                    showEasyServoData={showEasyServoData}
-                                    showEasyServoSg90Data={showEasyServoSg90Data}
-                                    showEasyStepperData={showEasyStepperData}
-                                    showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
-                                    useAddressConstants={useAddressConstants}
-                                />
-                            ) : (
-                                <Box
-                                    sx={{
-                                        backgroundColor: red[500] + '22',
-                                        borderStyle: 'solid',
-                                        borderWidth: '1px',
-                                        borderColor: red[800],
-                                        borderRadius: '1rem',
-                                        width: '100%',
-                                        padding: '1rem',
-                                    }}
-                                >
-                                    <Typography component={'div'}>
-                                        <p>
-                                            Unable to locate modules. Please set the path of the DCS-BIOS .json files
-                                            from Menu &gt; Select dcs-bios location.
-                                        </p>
-                                        <span>
-                                            Current path: <pre>{window.Main.getSettingsJsonPath()}</pre>
-                                        </span>
-                                    </Typography>
                                 </Box>
-                            )
-                        ) : (
-                            <LinearProgress />
-                        )}
+                            ) : null}
+                            </Box>
+                        </Box>
+                        <Box sx={{ marginTop: '1rem' }}>
+                            {hasLoadedModules ? (
+                                module ? (
+                                    <Module
+                                        module={module}
+                                        moduleName={activeModule}
+                                        categoryName={activeCategory}
+                                        focusedComponent={focusedComponent ?? undefined}
+                                        focusedRef={focusedRef ?? undefined}
+                                        showLiveData={showLiveData}
+                                        showArduinoData={showArduinoData}
+                                        showEasyServoData={showEasyServoData}
+                                        showEasyServoSg90Data={showEasyServoSg90Data}
+                                        showEasyStepperData={showEasyStepperData}
+                                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                                        useAddressConstants={useAddressConstants}
+                                    />
+                                ) : (
+                                    <Box
+                                        sx={{
+                                            backgroundColor: red[500] + '22',
+                                            borderStyle: 'solid',
+                                            borderWidth: '1px',
+                                            borderColor: red[800],
+                                            borderRadius: '1rem',
+                                            width: '100%',
+                                            padding: '1rem',
+                                        }}
+                                    >
+                                        <Typography component={'div'}>
+                                            <p>
+                                                Unable to locate modules. Please set the path of the DCS-BIOS .json
+                                                files from Menu &gt; Select dcs-bios location.
+                                            </p>
+                                            <span>
+                                                Current path: <pre>{window.Main.getSettingsJsonPath()}</pre>
+                                            </span>
+                                        </Typography>
+                                    </Box>
+                                )
+                            ) : (
+                                <LinearProgress />
+                            )}
+                        </Box>
                     </Grid>
                 </Grid>
             </Container>

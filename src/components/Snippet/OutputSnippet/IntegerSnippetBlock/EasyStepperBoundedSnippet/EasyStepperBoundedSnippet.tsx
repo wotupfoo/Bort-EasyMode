@@ -8,18 +8,28 @@ export default class EasyStepperBoundedSnippet extends Component<IntegerSnippetP
     public render(): ReactNode {
         const { controlIdentifier, output, useAddressConstants } = this.props;
         const methodName = Snippet.snakeToCamelCase(controlIdentifier);
-        const useAddressIdentifier = useAddressConstants && !!output.address_identifier;
-        const source = (useAddressIdentifier && output.address_identifier) || Snippet.toHex(output.address);
+        const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
             <Snippet>
-                DcsBios::EasyStepper_Bounded {methodName}(
+                DcsBios::EasyMode::Stepper {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                {source}
-                {useAddressIdentifier
-                    ? ', // Telemetry source: altitude above mean sea level in feet\n    '
-                    : ',              // DCS World: memory address with the value\n    '}
+                {usePackedIdentifier ? (
+                    <>
+                        {output.address_mask_shift_identifier}
+                        {', // DCS-BIOS Channel\n    '}
+                    </>
+                ) : (
+                    <>
+                        {Snippet.toHex(output.address)}
+                        {', // DCS World: memory address with the value\n    '}
+                        {Snippet.toHex(output.mask)}
+                        {', // Bit mask for packed integer fields\n    '}
+                        {output.shift_by}
+                        {', // Right shift for packed integer fields\n    '}
+                    </>
+                )}
                 <Variable>PIN1</Variable>
                 {',                      // Stepper driver input pin 1\n    '}
                 <Variable>PIN2</Variable>

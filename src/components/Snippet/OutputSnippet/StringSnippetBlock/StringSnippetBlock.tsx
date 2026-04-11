@@ -9,7 +9,7 @@ export default class StringSnippetBlock extends Component<StringSnippetProps> {
         const { controlIdentifier, output, showAdvancedCodeSnippets, useAddressConstants } = this.props;
 
         return (
-            <OutputSnippetBlock output={output}>
+            <OutputSnippetBlock output={output} useAddressConstants={useAddressConstants}>
                 <StringBufferSnippet
                     controlIdentifier={controlIdentifier}
                     output={output}

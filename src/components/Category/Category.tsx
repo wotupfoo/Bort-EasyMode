@@ -12,7 +12,6 @@ export interface CategoryProps {
     focusedRef?: React.RefObject<HTMLDivElement>;
     showLiveData: boolean;
     showArduinoData: boolean;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -35,7 +34,6 @@ export default class Category extends Component<CategoryProps> {
             focusedRef,
             showLiveData,
             showArduinoData,
-            showEasyModeData,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -56,7 +54,6 @@ export default class Category extends Component<CategoryProps> {
                                 key={e[1].identifier}
                                 showLiveData={showLiveData}
                                 showArduinoData={showArduinoData}
-                                showEasyModeData={showEasyModeData}
                                 showEasyServoData={showEasyServoData}
                                 showEasyServoSg90Data={showEasyServoSg90Data}
                                 showEasyStepperData={showEasyStepperData}

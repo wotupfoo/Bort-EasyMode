@@ -12,13 +12,13 @@ export default class EasyStepper28Byj48ContinuousSnippet extends Component<Integ
 
         return (
             <Snippet>
-                DcsBios::EasyStepper_28BYJ48_Continuous {methodName}(
+                DcsBios::EasyMode::Stepper_28BYJ48 {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 {usePackedIdentifier ? (
                     <>
                         {output.address_mask_shift_identifier}
-                        {', // Telemetry source\n'}
+                        {', // DCS-BIOS Channel\n'}
                     </>
                 ) : (
                     <>
@@ -42,7 +42,9 @@ export default class EasyStepper28Byj48ContinuousSnippet extends Component<Integ
                 <Variable>ZEROPIN</Variable>
                 {',              // Zero angle detection input pin\n    '}
                 <Variable>true</Variable>
-                {'                 // Zero is in the middle of the range (true or false)\n);'}
+                {',                 // Zero is in the middle of the range (true or false)\n    '}
+                DcsBios::EasyMode::StepperMode::Wrap
+                {' // Wrap through 360 degrees smoothly\n);'}
             </Snippet>
         );
     }

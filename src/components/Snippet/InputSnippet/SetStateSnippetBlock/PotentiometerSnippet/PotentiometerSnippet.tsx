@@ -14,7 +14,13 @@ export default class PotentiometerSnippet extends Component<PotentiometerSnippet
 
         return (
             <Snippet>
-                DcsBios::Potentiometer {methodName}({`"${controlIdentifier}"`}, <Variable>PIN</Variable>);
+                DcsBios::EasyMode::Potentiometer {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                <Variable>PIN</Variable>
+                {'                      // Analog pin connected to the potentiometer wiper\n);'}
             </Snippet>
         );
     }

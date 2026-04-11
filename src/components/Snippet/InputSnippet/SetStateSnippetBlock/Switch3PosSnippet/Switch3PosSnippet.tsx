@@ -14,8 +14,15 @@ export default class Switch3PosSnippet extends Component<Switch3PosSnippetProps>
 
         return (
             <Snippet>
-                DcsBios::Switch3Pos {methodName}({`"${controlIdentifier}"`}, <Variable>PIN_A</Variable>,{' '}
-                <Variable>PIN_B</Variable>);
+                DcsBios::EasyMode::Switch3Pos {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                <Variable>PIN_A</Variable>
+                {',                    // Arduino pin connected to switch position A\n    '}
+                <Variable>PIN_B</Variable>
+                {'                    // Arduino pin connected to switch position B\n);'}
             </Snippet>
         );
     }

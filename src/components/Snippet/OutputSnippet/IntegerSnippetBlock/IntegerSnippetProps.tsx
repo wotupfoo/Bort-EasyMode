@@ -4,7 +4,6 @@ export interface IntegerSnippetProps {
     moduleName: string;
     controlIdentifier: string;
     output: Output;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;

@@ -166,14 +166,6 @@ export const api = {
         Settings.Instance.ShowArduinoData = value;
     },
 
-    getShowEasyModeData: (): boolean => {
-        return Settings.Instance.ShowEasyModeData;
-    },
-
-    setShowEasyModeData: (value: boolean) => {
-        Settings.Instance.ShowEasyModeData = value;
-    },
-
     getShowEasyServoData: (): boolean => {
         return Settings.Instance.ShowEasyServoData;
     },

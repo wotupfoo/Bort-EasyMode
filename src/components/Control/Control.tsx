@@ -15,7 +15,6 @@ export interface ControlProps {
     moduleName: string;
     showLiveData: boolean;
     showArduinoData: boolean;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -65,7 +64,6 @@ export default class Control extends Component<ControlProps, ControlState> {
             control,
             showLiveData,
             showArduinoData,
-            showEasyModeData,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -119,7 +117,6 @@ export default class Control extends Component<ControlProps, ControlState> {
                                     key={x.type}
                                     showLiveData={showLiveData}
                                     showArduinoData={showArduinoData}
-                                    showEasyModeData={showEasyModeData}
                                     showEasyServoData={showEasyServoData}
                                     showEasyServoSg90Data={showEasyServoSg90Data}
                                     showEasyStepperData={showEasyStepperData}

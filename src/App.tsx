@@ -65,7 +65,6 @@ interface AppState {
     mode: PaletteMode;
     showLiveData: boolean;
     showArduinoData: boolean;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -82,10 +81,9 @@ export default class App extends Component<unknown, AppState> {
             mode: 'light',
             showLiveData: true,
             showArduinoData: false,
-            showEasyModeData: false,
-            showEasyServoData: true,
+            showEasyServoData: false,
             showEasyServoSg90Data: true,
-            showEasyStepperData: true,
+            showEasyStepperData: false,
             showEasyStepper28Byj48Data: true,
             showAdvancedCodeSnippets: false,
             useAddressConstants: false,
@@ -94,7 +92,6 @@ export default class App extends Component<unknown, AppState> {
         this.toggleColorMode = this.toggleColorMode.bind(this);
         this.toggleShowLiveData = this.toggleShowLiveData.bind(this);
         this.toggleShowArduinoData = this.toggleShowArduinoData.bind(this);
-        this.toggleShowEasyModeData = this.toggleShowEasyModeData.bind(this);
         this.toggleShowEasyServoData = this.toggleShowEasyServoData.bind(this);
         this.toggleShowEasyServoSg90Data = this.toggleShowEasyServoSg90Data.bind(this);
         this.toggleShowEasyStepperData = this.toggleShowEasyStepperData.bind(this);
@@ -108,7 +105,6 @@ export default class App extends Component<unknown, AppState> {
             mode: window.Main.getSettingsTheme(),
             showLiveData: window.Main.getShowLiveData(),
             showArduinoData: window.Main.getShowArduinoData(),
-            showEasyModeData: window.Main.getShowEasyModeData(),
             showEasyServoData: window.Main.getShowEasyServoData(),
             showEasyServoSg90Data: window.Main.getShowEasyServoSg90Data(),
             showEasyStepperData: window.Main.getShowEasyStepperData(),
@@ -139,14 +135,6 @@ export default class App extends Component<unknown, AppState> {
         window.Main.setShowArduinoData(newValue);
         this.setState({
             showArduinoData: newValue,
-        });
-    }
-
-    private toggleShowEasyModeData() {
-        const newValue = !this.state.showEasyModeData;
-        window.Main.setShowEasyModeData(newValue);
-        this.setState({
-            showEasyModeData: newValue,
         });
     }
 
@@ -203,7 +191,6 @@ export default class App extends Component<unknown, AppState> {
             mode,
             showLiveData,
             showArduinoData,
-            showEasyModeData,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -234,7 +221,6 @@ export default class App extends Component<unknown, AppState> {
                         onThemeToggle={this.toggleColorMode}
                         onShowLiveDataToggle={this.toggleShowLiveData}
                         onShowArduinoCodeToggle={this.toggleShowArduinoData}
-                        onShowEasyModeDataToggle={this.toggleShowEasyModeData}
                         onShowEasyServoDataToggle={this.toggleShowEasyServoData}
                         onShowEasyServoSg90DataToggle={this.toggleShowEasyServoSg90Data}
                         onShowEasyStepperDataToggle={this.toggleShowEasyStepperData}
@@ -243,7 +229,6 @@ export default class App extends Component<unknown, AppState> {
                         onUseAddressConstantsToggle={this.toggleUseAddressConstants}
                         showLiveData={showLiveData}
                         showArduinoData={showArduinoData}
-                        showEasyModeData={showEasyModeData}
                         showEasyServoData={showEasyServoData}
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}

@@ -8,6 +8,8 @@ export default class StringBufferSnippet extends Component<StringSnippetProps> {
         const { controlIdentifier, output, useAddressConstants } = this.props;
         const methodName = Snippet.snakeToCamelCase(`${controlIdentifier}${output.suffix}_Buffer`);
         const callbackMethodName = Snippet.snakeToCamelCase(`on_${controlIdentifier}_change`);
+        const useAddressIdentifier = useAddressConstants && !!output.address_identifier;
+        const source = (useAddressIdentifier && output.address_identifier) || Snippet.toHex(output.address);
 
         return (
             <Snippet>
@@ -17,9 +19,15 @@ export default class StringBufferSnippet extends Component<StringSnippetProps> {
                 <br />
                 &#125;
                 <br />
-                DcsBios::StringBuffer&lt;{output.max_length}&gt; {methodName}(
-                {(useAddressConstants && output.address_identifier) || Snippet.toHex(output.address)},{' '}
-                {callbackMethodName});
+                DcsBios::EasyMode::StringBuffer&lt;{output.max_length}&gt; {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {source}
+                {useAddressIdentifier
+                    ? ', // DCS-BIOS Channel\n    '
+                    : ', // DCS World: memory address with the string\n    '}
+                {callbackMethodName}
+                {'       // Called when the string changes\n);'}
             </Snippet>
         );
     }

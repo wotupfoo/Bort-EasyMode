@@ -16,8 +16,15 @@ export default class ActionButtonSnippet extends Component<ActionButtonSnippetPr
 
         return (
             <Snippet>
-                DcsBios::ActionButton {methodName}({`"${controlIdentifier}"`}, {`"${input.argument}"`},{' '}
-                <Variable>PIN</Variable>);
+                DcsBios::EasyMode::ActionButton {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                {`"${input.argument}"`}
+                {', // Argument sent when the button is pressed\n    '}
+                <Variable>PIN</Variable>
+                {'                      // Arduino pin connected to the button\n);'}
             </Snippet>
         );
     }

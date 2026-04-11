@@ -14,8 +14,15 @@ export default class Matrix2PosSnippet extends Component<Matrix2PosSnippetProps>
 
         return (
             <Snippet>
-                DcsBios::Matrix2Pos {methodName}({`"${controlIdentifier}"`}, <Variable>ROW</Variable>,{' '}
-                <Variable>COL</Variable>);
+                DcsBios::EasyMode::Matrix2Pos {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                <Variable>ROW</Variable>
+                {',                      // Matrix row pin\n    '}
+                <Variable>COL</Variable>
+                {'                      // Matrix column pin\n);'}
             </Snippet>
         );
     }

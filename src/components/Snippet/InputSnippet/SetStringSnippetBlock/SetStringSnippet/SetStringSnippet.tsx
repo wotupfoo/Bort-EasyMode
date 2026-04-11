@@ -16,8 +16,15 @@ export default class SetStringSnippet extends Component<SetStringSnippetProps> {
 
         return (
             <Snippet>
-                DcsBios::ActionButton {methodName}({`"${controlIdentifier}"`}, <Variable>FREQUENCY</Variable>,{' '}
-                <Variable>PIN</Variable>);
+                DcsBios::EasyMode::ActionButton {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                <Variable>FREQUENCY</Variable>
+                {',                // Argument sent when the button is pressed\n    '}
+                <Variable>PIN</Variable>
+                {'                      // Arduino pin connected to the button\n);'}
             </Snippet>
         );
     }

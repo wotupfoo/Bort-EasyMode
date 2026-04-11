@@ -14,7 +14,13 @@ export default class Switch2PosSnippet extends Component<Switch2PosSnippetProps>
 
         return (
             <Snippet>
-                DcsBios::Switch2Pos {methodName}({`"${controlIdentifier}"`}, <Variable>PIN</Variable>);
+                DcsBios::EasyMode::Switch2Pos {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                <Variable>PIN</Variable>
+                {'                      // Arduino pin connected to the switch\n);'}
             </Snippet>
         );
     }

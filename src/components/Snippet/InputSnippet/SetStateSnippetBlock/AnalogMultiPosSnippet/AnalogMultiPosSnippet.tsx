@@ -14,8 +14,15 @@ export default class AnalogMultiPosSnippet extends Component<AnalogMultiPosSnipp
 
         return (
             <Snippet>
-                DcsBios::AnalogMultiPos {methodName}({`"${controlIdentifier}"`}, <Variable>PIN</Variable>,{' '}
-                <Variable>STEPS</Variable>);
+                DcsBios::EasyMode::AnalogMultiPos {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                <Variable>PIN</Variable>
+                {',                      // Analog pin connected to the resistor ladder\n    '}
+                <Variable>STEPS</Variable>
+                {'                    // Number of switch positions\n);'}
             </Snippet>
         );
     }

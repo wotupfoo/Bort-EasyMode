@@ -16,8 +16,19 @@ export default class RotaryEncoderSnippet extends Component<RotaryEncoderSnippet
 
         return (
             <Snippet>
-                DcsBios::RotaryEncoder {methodName}({`"${controlIdentifier}"`}, "{downArgument}", "{upArgument}",{' '}
-                <Variable>PIN_A</Variable>, <Variable>PIN_B</Variable>);
+                DcsBios::EasyMode::RotaryEncoder {methodName}(
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {`"${controlIdentifier}"`}
+                {', // DCS-BIOS Control\n    '}
+                "{downArgument}"
+                {', // Argument sent for one step in the negative direction\n    '}
+                "{upArgument}"
+                {',   // Argument sent for one step in the positive direction\n    '}
+                <Variable>PIN_A</Variable>
+                {',                  // Encoder channel A pin\n    '}
+                <Variable>PIN_B</Variable>
+                {'                   // Encoder channel B pin\n);'}
             </Snippet>
         );
     }

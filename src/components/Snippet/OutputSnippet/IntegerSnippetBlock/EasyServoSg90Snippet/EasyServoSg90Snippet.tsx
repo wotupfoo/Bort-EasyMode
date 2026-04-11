@@ -8,18 +8,28 @@ export default class EasyServoSg90Snippet extends Component<IntegerSnippetProps>
     public render(): ReactNode {
         const { controlIdentifier, output, useAddressConstants } = this.props;
         const methodName = Snippet.snakeToCamelCase(controlIdentifier);
-        const useAddressIdentifier = useAddressConstants && !!output.address_identifier;
-        const source = (useAddressIdentifier && output.address_identifier) || Snippet.toHex(output.address);
+        const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
             <Snippet>
-                DcsBios::EasyServo_SG90 {methodName}(
+                DcsBios::EasyMode::Servo_SG90 {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                {source}
-                {useAddressIdentifier
-                    ? ', // Telemetry source\n    '
-                    : ', // DCS World: memory address with the value\n    '}
+                {usePackedIdentifier ? (
+                    <>
+                        {output.address_mask_shift_identifier}
+                        {', // DCS-BIOS Channel\n    '}
+                    </>
+                ) : (
+                    <>
+                        {Snippet.toHex(output.address)}
+                        {', // DCS World: memory address with the value\n    '}
+                        {Snippet.toHex(output.mask)}
+                        {', // Bit mask for packed integer fields\n    '}
+                        {output.shift_by}
+                        {', // Right shift for packed integer fields\n    '}
+                    </>
+                )}
                 <Variable>PIN</Variable>
                 {'                          // Arduino pin connected to the servo signal wire\n);'}
             </Snippet>

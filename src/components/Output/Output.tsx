@@ -14,7 +14,6 @@ export interface OutputProps {
     output: OutputItem;
     showLiveData: boolean;
     showArduinoData: boolean;
-    showEasyModeData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -57,7 +56,6 @@ export default class Output extends Component<OutputProps> {
             moduleName,
             identifier,
             output,
-            showEasyModeData,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -72,7 +70,6 @@ export default class Output extends Component<OutputProps> {
                         moduleName={moduleName}
                         controlIdentifier={identifier}
                         output={output}
-                        showEasyModeData={showEasyModeData}
                         showEasyServoData={showEasyServoData}
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}

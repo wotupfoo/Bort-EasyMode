@@ -24,7 +24,6 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
             moduleName,
             controlIdentifier,
             output,
-            showEasyModeData,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -40,164 +39,160 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
                     moduleName={moduleName}
                     controlIdentifier={controlIdentifier}
                     output={output}
-                    showEasyModeData={showEasyModeData}
                     showEasyServoData={showEasyServoData}
                     showEasyServoSg90Data={showEasyServoSg90Data}
                     showEasyStepperData={showEasyStepperData}
                     showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                     useAddressConstants={useAddressConstants}
                     key={'led-snippet'}
                 />
             );
         } else if (output.max_value == 65535) {
             // Full-range 16-bit input. This can still drive bounded hardware such as servos.
-            if (showEasyModeData) {
-                if (showEasyServoSg90Data) {
-                    yield (
-                        <EasyServoSg90Snippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-servo-sg90-snippet'}
-                        />
-                    );
-                }
-                if (showEasyServoData) {
-                    yield (
-                        <EasyServoSnippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-servo-snippet'}
-                        />
-                    );
-                }
-                if (showEasyStepperData) {
-                    yield (
-                        <EasyStepperContinuousSnippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-stepper-continuous-snippet'}
-                        />
-                    );
-                }
-                if (showEasyStepper28Byj48Data) {
-                    yield (
-                        <EasyStepper28Byj48ContinuousSnippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-stepper-28byj48-continuous-snippet'}
-                        />
-                    );
-                }
+            if (showEasyServoSg90Data) {
+                yield (
+                    <EasyServoSg90Snippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-servo-sg90-snippet'}
+                    />
+                );
+            }
+            if (showEasyServoData) {
+                yield (
+                    <EasyServoSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-servo-snippet'}
+                    />
+                );
+            }
+            if (showEasyStepperData) {
+                yield (
+                    <EasyStepperBoundedSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-stepper-bounded-snippet'}
+                    />
+                );
+            }
+            if (showEasyStepper28Byj48Data) {
+                yield (
+                    <EasyStepper28Byj48BoundedSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-stepper-28byj48-bounded-snippet'}
+                    />
+                );
             }
             yield (
                 <ServoSnippet
                     moduleName={moduleName}
                     controlIdentifier={controlIdentifier}
                     output={output}
-                    showEasyModeData={showEasyModeData}
                     showEasyServoData={showEasyServoData}
                     showEasyServoSg90Data={showEasyServoSg90Data}
                     showEasyStepperData={showEasyStepperData}
                     showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                     useAddressConstants={useAddressConstants}
                     key={'servo-snippet'}
                 />
             );
         } else {
-            // Bounded. eg Compass output.max_value == 360
-            if (showEasyModeData) {
-                if (showEasyServoSg90Data) {
-                    yield (
-                        <EasyServoSg90Snippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-servo-sg90-snippet'}
-                        />
-                    );
-                }
-                if (showEasyServoData) {
-                    yield (
-                        <EasyServoSnippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-servo-snippet'}
-                        />
-                    );
-                }
-                if (showEasyStepper28Byj48Data) {
-                    yield (
-                        <EasyStepper28Byj48BoundedSnippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-stepper-28byj48-bounded-snippet'}
-                        />
-                    );
-                }
-                if (showEasyStepperData) {
-                    yield (
-                        <EasyStepperBoundedSnippet
-                            moduleName={moduleName}
-                            controlIdentifier={controlIdentifier}
-                            output={output}
-                            showEasyModeData={showEasyModeData}
-                            showEasyServoData={showEasyServoData}
-                            showEasyServoSg90Data={showEasyServoSg90Data}
-                            showEasyStepperData={showEasyStepperData}
-                            showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                            useAddressConstants={useAddressConstants}
-                            key={'easy-stepper-bounded-snippet'}
-                        />
-                    );
-                }
+            // Bounded angle-like telemetry. eg Compass output.max_value == 360
+            if (showEasyServoSg90Data) {
+                yield (
+                    <EasyServoSg90Snippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-servo-sg90-snippet'}
+                    />
+                );
+            }
+            if (showEasyServoData) {
+                yield (
+                    <EasyServoSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-servo-snippet'}
+                    />
+                );
+            }
+            if (showEasyStepper28Byj48Data) {
+                yield (
+                    <EasyStepper28Byj48ContinuousSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-stepper-28byj48-continuous-snippet'}
+                    />
+                );
+            }
+            if (showEasyStepperData) {
+                yield (
+                    <EasyStepperContinuousSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'easy-stepper-continuous-snippet'}
+                    />
+                );
             }
             // DCS-BIOS Servo
             yield (
@@ -205,11 +200,11 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
                     moduleName={moduleName}
                     controlIdentifier={controlIdentifier}
                     output={output}
-                    showEasyModeData={showEasyModeData}
                     showEasyServoData={showEasyServoData}
                     showEasyServoSg90Data={showEasyServoSg90Data}
                     showEasyStepperData={showEasyStepperData}
                     showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                     useAddressConstants={useAddressConstants}
                     key={'servo-snippet'}
                 />
@@ -224,7 +219,6 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
                     moduleName={moduleName}
                     controlIdentifier={controlIdentifier}
                     output={output}
-                    showEasyModeData={showEasyModeData}
                     showEasyServoData={showEasyServoData}
                     showEasyServoSg90Data={showEasyServoSg90Data}
                     showEasyStepperData={showEasyStepperData}
@@ -240,6 +234,10 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
     public render(): ReactNode {
         const { output } = this.props;
 
-        return <OutputSnippetBlock output={output}>{[...this.snippetsForInput()]}</OutputSnippetBlock>;
+        return (
+            <OutputSnippetBlock output={output} useAddressConstants={this.props.useAddressConstants}>
+                {[...this.snippetsForInput()]}
+            </OutputSnippetBlock>
+        );
     }
 }

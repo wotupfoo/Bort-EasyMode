@@ -12,11 +12,12 @@ let socketClient: net.Socket | null = null;
 let udpSocket: dgram.Socket | null = null;
 let udpConnected = false;
 let tcpConnected = false;
-let tcpWasConnectedOnce = false;
 let tcpFallbackTimer: ReturnType<typeof setTimeout> | null = null;
 
 const BIOS_HOST = '127.0.0.1';
 const BIOS_PORT = 7778;
+const UDP_TELEMETRY_ADDRESS = '239.255.50.10';
+const UDP_TELEMETRY_PORT = 5010;
 const TCP_FALLBACK_DELAY_MS = 1500;
 const VERBOSE_NETWORK_LOGGING = process.env.BORT_VERBOSE === '1';
 
@@ -45,7 +46,21 @@ function logNetworkStatus(reason: string) {
                   : 'idle';
 
     console.log(
-        `[bort-net] ${reason} | udpListening=${udpSocket !== null} udpConnected=${udpConnected} tcp=${tcpState} connected=${connectedToBios} target=${BIOS_HOST}:${BIOS_PORT}`,
+        `[bort-net] ${reason} | udpListening=${udpSocket !== null} udpConnected=${udpConnected} udpSource=${UDP_TELEMETRY_ADDRESS}:${UDP_TELEMETRY_PORT} tcp=${tcpState} connected=${connectedToBios} target=${BIOS_HOST}:${BIOS_PORT}`,
+    );
+}
+
+function logOutgoingStateChange(message: string, transport: 'TCP' | 'UDP') {
+    const tcpLocalPort = socketClient?.localPort ?? 'n/a';
+    const tcpRemotePort = socketClient?.remotePort ?? BIOS_PORT;
+    const udpLocalPort = udpSocket?.address().port ?? 'n/a';
+    const portDetails =
+        transport === 'UDP'
+            ? `local=${udpLocalPort} remote=${BIOS_PORT}`
+            : `local=${tcpLocalPort} remote=${tcpRemotePort}`;
+
+    console.log(
+        `[bort-send] transport=${transport} ports(${portDetails}) text=${JSON.stringify(message)}`,
     );
 }
 
@@ -87,7 +102,6 @@ function setupTcpClient() {
     socketClient.setNoDelay();
     socketClient.on('connect', () => {
         tcpConnected = true;
-        tcpWasConnectedOnce = true;
         clearTcpFallbackTimer();
         logVerbose(`connected to tcp dcs-bios on ${BIOS_HOST}:${BIOS_PORT}`);
         refreshConnectionState();
@@ -125,21 +139,25 @@ function connectToTcpSocket() {
 function startUdpListener() {
     if (udpSocket !== null) return;
 
-    udpSocket = dgram.createSocket('udp4');
+    udpSocket = dgram.createSocket({ type: 'udp4', reuseAddr: true });
     udpSocket.on('listening', () => {
-        logVerbose(`listening for udp dcs-bios data on ${BIOS_HOST}:${BIOS_PORT}`);
+        try {
+            udpSocket?.addMembership(UDP_TELEMETRY_ADDRESS);
+        } catch (err) {
+            logVerbose(`failed to join udp multicast group ${UDP_TELEMETRY_ADDRESS}`, err);
+        }
+        logVerbose(`listening for udp dcs-bios data on ${UDP_TELEMETRY_ADDRESS}:${UDP_TELEMETRY_PORT}`);
         logNetworkStatus('udp bind succeeded');
     });
     udpSocket.on('message', message => {
-        if (tcpWasConnectedOnce || tcpConnected) {
-            logVerbose('ignoring udp dcs-bios packet because tcp is the active transport');
-            return;
-        }
-
         if (!udpConnected) {
             udpConnected = true;
             clearTcpFallbackTimer();
-            logVerbose(`received first udp dcs-bios packet on ${BIOS_HOST}:${BIOS_PORT}`);
+            logVerbose(`received first udp dcs-bios packet on ${UDP_TELEMETRY_ADDRESS}:${UDP_TELEMETRY_PORT}`);
+            if (tcpConnected) {
+                logVerbose('udp is now available; switching active transport from tcp to udp');
+                destroyTcpClient();
+            }
             refreshConnectionState();
         }
 
@@ -155,19 +173,14 @@ function startUdpListener() {
         udpConnected = false;
         refreshConnectionState();
     });
-    logVerbose(`attempting udp bind on ${BIOS_HOST}:${BIOS_PORT}`);
-    udpSocket.bind(BIOS_PORT, BIOS_HOST);
+    logVerbose(`attempting udp bind on 0.0.0.0:${UDP_TELEMETRY_PORT} and joining ${UDP_TELEMETRY_ADDRESS}`);
+    udpSocket.bind(UDP_TELEMETRY_PORT);
 }
 
 function tryUdpThenTcp() {
-    if (tcpWasConnectedOnce) {
-        logVerbose('tcp has connected before, skipping udp probe and keeping tcp as the preferred transport');
-        clearTcpFallbackTimer();
-        connectToTcpSocket();
-        return;
-    }
-
-    logVerbose(`trying udp first on ${BIOS_HOST}:${BIOS_PORT} with tcp fallback after ${TCP_FALLBACK_DELAY_MS}ms`);
+    logVerbose(
+        `trying udp first on ${UDP_TELEMETRY_ADDRESS}:${UDP_TELEMETRY_PORT} with tcp fallback to ${BIOS_HOST}:${BIOS_PORT} after ${TCP_FALLBACK_DELAY_MS}ms`,
+    );
     startUdpListener();
     clearTcpFallbackTimer();
     tcpFallbackTimer = setTimeout(() => {
@@ -183,6 +196,7 @@ function createWindow() {
     logVerbose('starting Bort-EasyMode network setup');
     mainWindow = new BrowserWindow({
         // icon: path.join(assetsPath, 'assets', 'icon.png'),
+        title: 'DCS-BIOS Easy Mode Reference Tool',
         width: 900,
         height: 1200,
         minWidth: 500,
@@ -308,18 +322,20 @@ async function registerListeners() {
         const payload = rawStringToBuffer(message);
 
         if (udpConnected && udpSocket !== null) {
+            logOutgoingStateChange(message, 'UDP');
             logVerbose(`sending command via udp to ${BIOS_HOST}:${BIOS_PORT}`);
             udpSocket.send(payload, BIOS_PORT, BIOS_HOST);
             return;
         }
 
+        logOutgoingStateChange(message, 'TCP');
         logVerbose(`sending command via tcp to ${BIOS_HOST}:${BIOS_PORT}`);
         socketClient?.write(payload);
     });
 
     ipcMain.on('retry-connection', () => {
-        if (tcpConnected || tcpWasConnectedOnce) {
-            logVerbose('tcp is already established or preferred, skipping udp retry probe');
+        if (tcpConnected) {
+            logVerbose('tcp is already established, skipping duplicate tcp connect');
             connectToTcpSocket();
             refreshConnectionState();
             return;
