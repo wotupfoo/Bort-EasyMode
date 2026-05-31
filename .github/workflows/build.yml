@@ -11,6 +11,7 @@ permissions:
 
 jobs:
     build_on_linux:
+        if: false
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
@@ -24,6 +25,7 @@ jobs:
               run: npm run make
 
     build_on_mac:
+        if: false
         runs-on: macos-latest
         steps:
             - uses: actions/checkout@v6
@@ -37,6 +39,7 @@ jobs:
               run: npm run make
 
     build_on_win:
+        if: true
         runs-on: windows-latest
         steps:
             - uses: actions/checkout@v6
