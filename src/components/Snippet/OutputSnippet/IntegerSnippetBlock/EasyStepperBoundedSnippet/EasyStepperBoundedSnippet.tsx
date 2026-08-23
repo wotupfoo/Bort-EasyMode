@@ -39,9 +39,14 @@ export default class EasyStepperBoundedSnippet extends Component<IntegerSnippetP
                 <Variable>PIN4</Variable>
                 {',                      // Stepper driver input pin 4\n    '}
                 <Variable>ZEROPIN</Variable>
-                {',                   // Zero angle detection input pin\n    '}
-                <Variable>true</Variable>
-                {'                      // Zero is in the middle of the range (true or false)\n);'}
+                {',                   // Zero angle detection input pin\n    '}LOW
+                {'                       // ZEROPIN active state\n);\n'}
+                {methodName}
+                {'.configureBoundedBehavior(\n    '}
+                <Variable>0.0f</Variable>
+                {',                    // Minimum needle angle in degrees\n    '}
+                <Variable>360.0f</Variable>
+                {'                  // Maximum needle angle in degrees\n);'}
             </Snippet>
         );
     }

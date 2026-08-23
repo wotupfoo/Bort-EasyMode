@@ -22,7 +22,11 @@ export default class AnalogMultiPosSnippet extends Component<AnalogMultiPosSnipp
                 <Variable>PIN</Variable>
                 {',                      // Analog pin connected to the resistor ladder\n    '}
                 <Variable>STEPS</Variable>
-                {'                    // Number of switch positions\n);'}
+                {',                    // Highest switch state, e.g. 1 for a two-position control\n    '}
+                <Variable>3</Variable>
+                {',                        // ADC boundary hysteresis in counts\n    '}
+                <Variable>false</Variable>
+                {'                    // Fast polling, true uses 50 ms instead of 750 ms\n);'}
             </Snippet>
         );
     }

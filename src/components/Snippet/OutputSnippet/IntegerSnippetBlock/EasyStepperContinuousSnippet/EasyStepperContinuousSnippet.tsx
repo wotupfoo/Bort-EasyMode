@@ -18,33 +18,35 @@ export default class EasyStepperContinuousSnippet extends Component<IntegerSnipp
                 {usePackedIdentifier ? (
                     <>
                         {output.address_mask_shift_identifier}
-                        {', // DCS-BIOS Channel\n'}
+                        {', // DCS-BIOS Channel\n    '}
                     </>
                 ) : (
                     <>
                         {Snippet.toHex(output.address)}
                         {', // DCS World: memory address with the value\n    '}
                         {Snippet.toHex(output.mask)}
-                        {',   // Bit mask for packed integer fields\n    '}
+                        {', // Bit mask for packed integer fields\n    '}
                         {output.shift_by}
-                        {',              // Right shift for packed integer fields\n'}
+                        {', // Right shift for packed integer fields\n    '}
                     </>
                 )}
-                &nbsp;&nbsp;&nbsp;&nbsp;
                 <Variable>PIN1</Variable>
-                {',                 // Stepper driver input pin 1\n    '}
+                {',                      // Stepper driver input pin 1\n    '}
                 <Variable>PIN2</Variable>
-                {',                 // Stepper driver input pin 2\n    '}
+                {',                      // Stepper driver input pin 2\n    '}
                 <Variable>PIN3</Variable>
-                {',                 // Stepper driver input pin 3\n    '}
+                {',                      // Stepper driver input pin 3\n    '}
                 <Variable>PIN4</Variable>
-                {',                 // Stepper driver input pin 4\n    '}
+                {',                      // Stepper driver input pin 4\n    '}
                 <Variable>ZEROPIN</Variable>
-                {',              // Zero angle detection input pin\n    '}
-                <Variable>true</Variable>
-                {',                 // Zero is in the middle of the range (true or false)\n    '}
-                DcsBios::EasyMode::StepperMode::Wrap
-                {' // Wrap through 360 degrees smoothly\n);'}
+                {',                   // Zero angle detection input pin\n    '}LOW
+                {'                       // ZEROPIN active state\n);\n'}
+                {methodName}
+                {'.setInputMaxValue('}
+                {output.max_value}
+                {');\n'}
+                {methodName}
+                {'.configureContinuousBehavior(true, true, true);'}
             </Snippet>
         );
     }

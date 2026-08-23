@@ -20,7 +20,11 @@ export default class PotentiometerSnippet extends Component<PotentiometerSnippet
                 {`"${controlIdentifier}"`}
                 {', // DCS-BIOS Control\n    '}
                 <Variable>PIN</Variable>
-                {'                      // Analog pin connected to the potentiometer wiper\n);'}
+                {',                      // Analog pin connected to the potentiometer wiper\n    '}
+                <Variable>false</Variable>
+                {',                    // Reverse direction (true or false)\n    '}
+                <Variable>2</Variable>
+                {'                         // Raw ADC hysteresis in counts\n);'}
             </Snippet>
         );
     }

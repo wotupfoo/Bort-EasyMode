@@ -31,7 +31,11 @@ export default class EasyServoSg90Snippet extends Component<IntegerSnippetProps>
                     </>
                 )}
                 <Variable>PIN</Variable>
-                {'                          // Arduino pin connected to the servo signal wire\n);'}
+                {'                          // Arduino pin connected to the servo signal wire\n);\n'}
+                {methodName}
+                {'.setInputMaxValue('}
+                {output.max_value}
+                {');'}
             </Snippet>
         );
     }

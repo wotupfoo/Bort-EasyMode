@@ -39,7 +39,11 @@ export default class EasyServoSnippet extends Component<IntegerSnippetProps> {
                 <Variable>false</Variable>
                 {',                  // Reverse the direction (true or false)\n    '}
                 <Variable>0</Variable>
-                {'                        // Trim Degrees: rotate the whole scale to match the printed dial face\n);'}
+                {
+                    ',                        // Trim Degrees: rotate the whole scale to match the printed dial face\n    '
+                }
+                {output.max_value}
+                {'                     // Maximum incoming DCS-BIOS value for this source\n);'}
             </Snippet>
         );
     }
