@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 import { IntegerSnippetProps } from '../IntegerSnippetProps';
@@ -11,7 +12,15 @@ export default class EasyStepperBoundedSnippet extends Component<IntegerSnippetP
         const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
-            <Snippet>
+            <FeatureSnippet
+                features={[
+                    'Generic stepper motor support',
+                    'Stepper+Gearing physical angle range setup',
+                    'Stepper homing',
+                    'Stepper min/max travel limits',
+                ]}
+            >
+                {'const long STEPS_PER_OUTPUT_REVOLUTION = 200;\n'}
                 DcsBios::EasyMode::Stepper {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -38,6 +47,8 @@ export default class EasyStepperBoundedSnippet extends Component<IntegerSnippetP
                 {',                      // Stepper driver input pin 3\n    '}
                 <Variable>PIN4</Variable>
                 {',                      // Stepper driver input pin 4\n    '}
+                <Variable>STEPS_PER_OUTPUT_REVOLUTION</Variable>
+                {', // Stepper steps per output shaft revolution after any gearing\n    '}
                 <Variable>ZEROPIN</Variable>
                 {',                   // Zero angle detection input pin\n    '}LOW
                 {'                       // ZEROPIN active state\n);\n'}
@@ -47,7 +58,8 @@ export default class EasyStepperBoundedSnippet extends Component<IntegerSnippetP
                 {',                    // Minimum needle angle in degrees\n    '}
                 <Variable>360.0f</Variable>
                 {'                  // Maximum needle angle in degrees\n);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }
+

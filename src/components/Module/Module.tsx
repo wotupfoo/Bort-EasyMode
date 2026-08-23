@@ -11,7 +11,8 @@ export interface ModuleProps {
     focusedComponent?: string;
     focusedRef?: React.RefObject<HTMLDivElement>;
     showLiveData: boolean;
-    showArduinoData: boolean;
+    ioFilterMode: string;
+    scaffoldingMode: string;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -33,7 +34,8 @@ export default class Module extends Component<ModuleProps> {
             focusedComponent,
             focusedRef,
             showLiveData,
-            showArduinoData,
+            ioFilterMode,
+            scaffoldingMode,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -51,7 +53,8 @@ export default class Module extends Component<ModuleProps> {
                         categoryName={categoryName}
                         category={category}
                         showLiveData={showLiveData}
-                        showArduinoData={showArduinoData}
+                        ioFilterMode={ioFilterMode}
+                        scaffoldingMode={scaffoldingMode}
                         showEasyServoData={showEasyServoData}
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}
@@ -70,7 +73,8 @@ export default class Module extends Component<ModuleProps> {
                             category={e[1]}
                             focusedComponent={focusedComponent}
                             showLiveData={showLiveData}
-                            showArduinoData={showArduinoData}
+                            ioFilterMode={ioFilterMode}
+                            scaffoldingMode={scaffoldingMode}
                             showEasyServoData={showEasyServoData}
                             showEasyServoSg90Data={showEasyServoSg90Data}
                             showEasyStepperData={showEasyStepperData}

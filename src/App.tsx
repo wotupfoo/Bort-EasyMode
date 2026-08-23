@@ -64,7 +64,8 @@ const getDesignTokens = (mode: PaletteMode): ThemeOptions => ({
 interface AppState {
     mode: PaletteMode;
     showLiveData: boolean;
-    showArduinoData: boolean;
+    ioFilterMode: string;
+    scaffoldingMode: string;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -80,7 +81,8 @@ export default class App extends Component<unknown, AppState> {
         this.state = {
             mode: 'light',
             showLiveData: true,
-            showArduinoData: false,
+            ioFilterMode: 'both',
+            scaffoldingMode: 'none',
             showEasyServoData: false,
             showEasyServoSg90Data: true,
             showEasyStepperData: false,
@@ -91,7 +93,8 @@ export default class App extends Component<unknown, AppState> {
 
         this.toggleColorMode = this.toggleColorMode.bind(this);
         this.toggleShowLiveData = this.toggleShowLiveData.bind(this);
-        this.toggleShowArduinoData = this.toggleShowArduinoData.bind(this);
+        this.changeIoFilterMode = this.changeIoFilterMode.bind(this);
+        this.changeScaffoldingMode = this.changeScaffoldingMode.bind(this);
         this.toggleShowEasyServoData = this.toggleShowEasyServoData.bind(this);
         this.toggleShowEasyServoSg90Data = this.toggleShowEasyServoSg90Data.bind(this);
         this.toggleShowEasyStepperData = this.toggleShowEasyStepperData.bind(this);
@@ -104,7 +107,6 @@ export default class App extends Component<unknown, AppState> {
         this.setState({
             mode: window.Main.getSettingsTheme(),
             showLiveData: window.Main.getShowLiveData(),
-            showArduinoData: window.Main.getShowArduinoData(),
             showEasyServoData: window.Main.getShowEasyServoData(),
             showEasyServoSg90Data: window.Main.getShowEasyServoSg90Data(),
             showEasyStepperData: window.Main.getShowEasyStepperData(),
@@ -130,11 +132,15 @@ export default class App extends Component<unknown, AppState> {
         });
     }
 
-    private toggleShowArduinoData() {
-        const newValue = !this.state.showArduinoData;
-        window.Main.setShowArduinoData(newValue);
+    private changeIoFilterMode(newValue: string) {
         this.setState({
-            showArduinoData: newValue,
+            ioFilterMode: newValue,
+        });
+    }
+
+    private changeScaffoldingMode(newValue: string) {
+        this.setState({
+            scaffoldingMode: newValue,
         });
     }
 
@@ -190,7 +196,8 @@ export default class App extends Component<unknown, AppState> {
         const {
             mode,
             showLiveData,
-            showArduinoData,
+            ioFilterMode,
+            scaffoldingMode,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -220,7 +227,8 @@ export default class App extends Component<unknown, AppState> {
                         theme={mode}
                         onThemeToggle={this.toggleColorMode}
                         onShowLiveDataToggle={this.toggleShowLiveData}
-                        onShowArduinoCodeToggle={this.toggleShowArduinoData}
+                        onIoFilterModeChange={this.changeIoFilterMode}
+                        onScaffoldingModeChange={this.changeScaffoldingMode}
                         onShowEasyServoDataToggle={this.toggleShowEasyServoData}
                         onShowEasyServoSg90DataToggle={this.toggleShowEasyServoSg90Data}
                         onShowEasyStepperDataToggle={this.toggleShowEasyStepperData}
@@ -228,7 +236,8 @@ export default class App extends Component<unknown, AppState> {
                         onShowAdvancedCodeSnippetsToggle={this.toggleShowAdvancedCodeSnippets}
                         onUseAddressConstantsToggle={this.toggleUseAddressConstants}
                         showLiveData={showLiveData}
-                        showArduinoData={showArduinoData}
+                        ioFilterMode={ioFilterMode}
+                        scaffoldingMode={scaffoldingMode}
                         showEasyServoData={showEasyServoData}
                         showEasyServoSg90Data={showEasyServoSg90Data}
                         showEasyStepperData={showEasyStepperData}

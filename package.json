@@ -3,7 +3,7 @@
     "author": "WotUpFoo",
     "productName": "Bort-EasyMode",
     "version": "0.4.0",
-    "description": "A standalone reference and code-generation tool for DCS-BIOS Easy Mode.",
+    "description": "A standalone reference and code-generation tool for DCS-BIOS EasyMode.",
     "private": true,
     "main": ".webpack/main",
     "repository": {

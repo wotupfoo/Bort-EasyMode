@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 
@@ -13,7 +14,7 @@ export default class Matrix3PosSnippet extends Component<Matrix2PosSnippetProps>
         const methodName = Snippet.snakeToCamelCase(`${controlIdentifier}`);
 
         return (
-            <Snippet>
+            <FeatureSnippet features={['DCS synchronization with periodic refresh']}>
                 DcsBios::EasyMode::Matrix3Pos {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -27,7 +28,7 @@ export default class Matrix3PosSnippet extends Component<Matrix2PosSnippetProps>
                 {',                    // Matrix row pin for position B\n    '}
                 <Variable>COL_B</Variable>
                 {'                    // Matrix column pin for position B\n);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

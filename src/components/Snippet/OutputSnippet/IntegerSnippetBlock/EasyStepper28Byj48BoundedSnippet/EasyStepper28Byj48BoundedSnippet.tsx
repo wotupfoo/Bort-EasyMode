@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 import { IntegerSnippetProps } from '../IntegerSnippetProps';
@@ -11,7 +12,14 @@ export default class EasyStepper28Byj48BoundedSnippet extends Component<IntegerS
         const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
-            <Snippet>
+            <FeatureSnippet
+                features={[
+                    '28BYJ-48/ULN2003 stepper/driver support',
+                    'Stepper+Gearing physical angle range setup',
+                    'Stepper homing',
+                    'Stepper min/max travel limits',
+                ]}
+            >
                 DcsBios::EasyMode::Stepper_28BYJ48 {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -47,7 +55,7 @@ export default class EasyStepper28Byj48BoundedSnippet extends Component<IntegerS
                 {',                    // Minimum needle angle in degrees\n    '}
                 <Variable>360.0f</Variable>
                 {'                  // Maximum needle angle in degrees\n);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

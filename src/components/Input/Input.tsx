@@ -8,7 +8,6 @@ import SetStateSnippetBlock from '../Snippet/InputSnippet/SetStateSnippetBlock/S
 import SetStringSnippetBlock from '../Snippet/InputSnippet/SetStringSnippetBlock/SetStringSnippetBlock';
 import FixedStepSnippetBlock from '../Snippet/InputSnippet/StepSnippetBlock/FixedStepSnippetBlock/FixedStepSnippetBlock';
 import VariableStepSnippetBlock from '../Snippet/InputSnippet/StepSnippetBlock/VariableStepSnippetBlock/VariableStepSnippetBlock';
-import StringSnippetBlock from '../Snippet/OutputSnippet/StringSnippetBlock/StringSnippetBlock';
 import ActionButton from './Action/ActionButton';
 import FixedStep from './FixedStep/FixedStep';
 import SetState from './SetState/SetState';
@@ -18,7 +17,7 @@ import VariableStep from './VariableStep/VariableStep';
 export interface InputProps {
     identifier: string;
     showLiveData: boolean;
-    showArduinoData: boolean;
+    scaffoldingMode: string;
     input: InputItem;
 }
 
@@ -57,18 +56,48 @@ export default class Input extends Component<InputProps> {
     }
 
     private snippetForInterface(): ReactNode {
-        const { identifier, input } = this.props;
+        const { identifier, input, scaffoldingMode } = this.props;
         switch (input.interface) {
             case InputInterface.ACTION:
-                return <ActionSnippetBlock controlIdentifier={identifier} input={input} />;
+                return (
+                    <ActionSnippetBlock
+                        controlIdentifier={identifier}
+                        input={input}
+                        scaffoldingMode={scaffoldingMode}
+                    />
+                );
             case InputInterface.FIXED_STEP:
-                return <FixedStepSnippetBlock controlIdentifier={identifier} input={input} />;
+                return (
+                    <FixedStepSnippetBlock
+                        controlIdentifier={identifier}
+                        input={input}
+                        scaffoldingMode={scaffoldingMode}
+                    />
+                );
             case InputInterface.VARIABLE_STEP:
-                return <VariableStepSnippetBlock controlIdentifier={identifier} input={input} />;
+                return (
+                    <VariableStepSnippetBlock
+                        controlIdentifier={identifier}
+                        input={input}
+                        scaffoldingMode={scaffoldingMode}
+                    />
+                );
             case InputInterface.SET_STATE:
-                return <SetStateSnippetBlock controlIdentifier={identifier} input={input} />;
+                return (
+                    <SetStateSnippetBlock
+                        controlIdentifier={identifier}
+                        input={input}
+                        scaffoldingMode={scaffoldingMode}
+                    />
+                );
             case InputInterface.SET_STRING:
-                return <SetStringSnippetBlock controlIdentifier={identifier} input={input} />;
+                return (
+                    <SetStringSnippetBlock
+                        controlIdentifier={identifier}
+                        input={input}
+                        scaffoldingMode={scaffoldingMode}
+                    />
+                );
         }
 
         console.error('no snippet!');
@@ -77,7 +106,29 @@ export default class Input extends Component<InputProps> {
     }
 
     public render(): ReactNode {
-        const { input, showLiveData, showArduinoData } = this.props;
+        const { input, showLiveData, scaffoldingMode } = this.props;
+        const maxValue = input.max_value;
+        const setStateHasEasyModeSnippet =
+            input.interface === InputInterface.SET_STATE &&
+            maxValue !== undefined &&
+            (maxValue <= 20 || maxValue == 65535);
+        const setStateHasPassThroughSnippet = false;
+        const hasScaffoldingSnippet =
+            (scaffoldingMode === 'easymode' && setStateHasEasyModeSnippet) ||
+            (scaffoldingMode === 'passthrough' &&
+                (input.interface === InputInterface.ACTION ||
+                    input.interface === InputInterface.FIXED_STEP ||
+                    input.interface === InputInterface.VARIABLE_STEP ||
+                    input.interface === InputInterface.SET_STRING ||
+                    setStateHasPassThroughSnippet)) ||
+            (scaffoldingMode === 'both' &&
+                (input.interface === InputInterface.ACTION ||
+                    input.interface === InputInterface.FIXED_STEP ||
+                    input.interface === InputInterface.VARIABLE_STEP ||
+                    input.interface === InputInterface.SET_STRING ||
+                    setStateHasEasyModeSnippet ||
+                    setStateHasPassThroughSnippet));
+
         return (
             <Grid
                 container
@@ -108,7 +159,7 @@ export default class Input extends Component<InputProps> {
                 ) : (
                     <></>
                 )}
-                {showArduinoData ? (
+                {hasScaffoldingSnippet ? (
                     <Grid container item xs={12}>
                         {this.snippetForInterface()}
                     </Grid>

@@ -158,14 +158,6 @@ export const api = {
         Settings.Instance.ShowLiveData = value;
     },
 
-    getShowArduinoData: (): boolean => {
-        return Settings.Instance.ShowArduinoData;
-    },
-
-    setShowArduinoData: (value: boolean) => {
-        Settings.Instance.ShowArduinoData = value;
-    },
-
     getShowEasyServoData: (): boolean => {
         return Settings.Instance.ShowEasyServoData;
     },

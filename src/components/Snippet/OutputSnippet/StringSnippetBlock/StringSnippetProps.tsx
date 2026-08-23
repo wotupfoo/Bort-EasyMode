@@ -5,4 +5,5 @@ export interface StringSnippetProps {
     output: Output;
     showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
+    scaffoldingMode: string;
 }

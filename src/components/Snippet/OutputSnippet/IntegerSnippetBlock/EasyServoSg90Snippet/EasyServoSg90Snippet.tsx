@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 import { IntegerSnippetProps } from '../IntegerSnippetProps';
@@ -11,7 +12,7 @@ export default class EasyServoSg90Snippet extends Component<IntegerSnippetProps>
         const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
-            <Snippet>
+            <FeatureSnippet features={['SG90 servo support']}>
                 DcsBios::EasyMode::Servo_SG90 {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -36,7 +37,7 @@ export default class EasyServoSg90Snippet extends Component<IntegerSnippetProps>
                 {'.setInputMaxValue('}
                 {output.max_value}
                 {');'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

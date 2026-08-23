@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 import { IntegerSnippetProps } from '../IntegerSnippetProps';
@@ -11,7 +12,13 @@ export default class EasyStepper28Byj48ContinuousSnippet extends Component<Integ
         const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
-            <Snippet>
+            <FeatureSnippet
+                features={[
+                    '28BYJ-48/ULN2003 stepper/driver support',
+                    'Stepper homing',
+                    'Stepper 360\u00b0 wrapping support',
+                ]}
+            >
                 DcsBios::EasyMode::Stepper_28BYJ48 {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -47,7 +54,7 @@ export default class EasyStepper28Byj48ContinuousSnippet extends Component<Integ
                 {');\n'}
                 {methodName}
                 {'.configureContinuousBehavior(true, true, true);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

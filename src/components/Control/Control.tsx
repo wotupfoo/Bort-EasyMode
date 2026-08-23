@@ -14,7 +14,8 @@ import PositionsContainer from '../PositionsContainer/PositionsContainer';
 export interface ControlProps {
     moduleName: string;
     showLiveData: boolean;
-    showArduinoData: boolean;
+    ioFilterMode: string;
+    scaffoldingMode: string;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -63,7 +64,8 @@ export default class Control extends Component<ControlProps, ControlState> {
             moduleName,
             control,
             showLiveData,
-            showArduinoData,
+            ioFilterMode,
+            scaffoldingMode,
             showEasyServoData,
             showEasyServoSg90Data,
             showEasyStepperData,
@@ -74,6 +76,8 @@ export default class Control extends Component<ControlProps, ControlState> {
         const { value } = this.state;
         const hasInputs = control.inputs.length > 0;
         const hasOutputs = control.outputs.length > 0;
+        const showInputs = hasInputs && ioFilterMode !== 'outputs';
+        const showOutputs = hasOutputs && ioFilterMode !== 'inputs';
         return (
             <Stack sx={controlTheme} className="control">
                 <Divider />
@@ -94,7 +98,7 @@ export default class Control extends Component<ControlProps, ControlState> {
                             }
                         />
                     )}
-                    {hasInputs && (
+                    {showInputs && (
                         <IOContainer text={'Input'}>
                             {control.inputs.map(x => (
                                 <Input
@@ -102,12 +106,12 @@ export default class Control extends Component<ControlProps, ControlState> {
                                     input={x}
                                     key={x.interface}
                                     showLiveData={showLiveData}
-                                    showArduinoData={showArduinoData}
+                                    scaffoldingMode={scaffoldingMode}
                                 />
                             ))}
                         </IOContainer>
                     )}
-                    {hasOutputs && (
+                    {showOutputs && (
                         <IOContainer text={'Output'}>
                             {control.outputs.map(x => (
                                 <Output
@@ -116,7 +120,7 @@ export default class Control extends Component<ControlProps, ControlState> {
                                     output={x}
                                     key={x.type}
                                     showLiveData={showLiveData}
-                                    showArduinoData={showArduinoData}
+                                    scaffoldingMode={scaffoldingMode}
                                     showEasyServoData={showEasyServoData}
                                     showEasyServoSg90Data={showEasyServoSg90Data}
                                     showEasyStepperData={showEasyStepperData}

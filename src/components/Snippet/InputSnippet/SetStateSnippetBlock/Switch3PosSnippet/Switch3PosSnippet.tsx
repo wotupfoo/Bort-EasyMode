@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 
@@ -13,7 +14,7 @@ export default class Switch3PosSnippet extends Component<Switch3PosSnippetProps>
         const methodName = Snippet.snakeToCamelCase(`${controlIdentifier}`);
 
         return (
-            <Snippet>
+            <FeatureSnippet features={['DCS synchronization with periodic refresh']}>
                 DcsBios::EasyMode::Switch3Pos {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -23,7 +24,7 @@ export default class Switch3PosSnippet extends Component<Switch3PosSnippetProps>
                 {',                    // Arduino pin connected to switch position A\n    '}
                 <Variable>PIN_B</Variable>
                 {'                    // Arduino pin connected to switch position B\n);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

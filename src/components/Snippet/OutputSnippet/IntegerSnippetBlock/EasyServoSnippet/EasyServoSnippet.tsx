@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 import { IntegerSnippetProps } from '../IntegerSnippetProps';
@@ -11,7 +12,7 @@ export default class EasyServoSnippet extends Component<IntegerSnippetProps> {
         const usePackedIdentifier = useAddressConstants && !!output.address_mask_shift_identifier;
 
         return (
-            <Snippet>
+            <FeatureSnippet features={['Generic Servo physical angle range setup']}>
                 DcsBios::EasyMode::Servo {methodName}(
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -44,7 +45,7 @@ export default class EasyServoSnippet extends Component<IntegerSnippetProps> {
                 }
                 {output.max_value}
                 {'                     // Maximum incoming DCS-BIOS value for this source\n);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

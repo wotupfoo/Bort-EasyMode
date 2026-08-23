@@ -38,15 +38,17 @@ function logNetworkStatus(reason: string) {
         socketClient === null
             ? 'none'
             : socketClient.connecting
-              ? 'connecting'
-              : socketClient.destroyed
-                ? 'destroyed'
-                : tcpConnected
-                  ? 'connected'
-                  : 'idle';
+            ? 'connecting'
+            : socketClient.destroyed
+            ? 'destroyed'
+            : tcpConnected
+            ? 'connected'
+            : 'idle';
 
     console.log(
-        `[bort-net] ${reason} | udpListening=${udpSocket !== null} udpConnected=${udpConnected} udpSource=${UDP_TELEMETRY_ADDRESS}:${UDP_TELEMETRY_PORT} tcp=${tcpState} connected=${connectedToBios} target=${BIOS_HOST}:${BIOS_PORT}`,
+        `[bort-net] ${reason} | udpListening=${
+            udpSocket !== null
+        } udpConnected=${udpConnected} udpSource=${UDP_TELEMETRY_ADDRESS}:${UDP_TELEMETRY_PORT} tcp=${tcpState} connected=${connectedToBios} target=${BIOS_HOST}:${BIOS_PORT}`,
     );
 }
 
@@ -59,9 +61,7 @@ function logOutgoingStateChange(message: string, transport: 'TCP' | 'UDP') {
             ? `local=${udpLocalPort} remote=${BIOS_PORT}`
             : `local=${tcpLocalPort} remote=${tcpRemotePort}`;
 
-    console.log(
-        `[bort-send] transport=${transport} ports(${portDetails}) text=${JSON.stringify(message)}`,
-    );
+    console.log(`[bort-send] transport=${transport} ports(${portDetails}) text=${JSON.stringify(message)}`);
 }
 
 function processIncomingData(data: Uint8Array) {
@@ -196,7 +196,7 @@ function createWindow() {
     logVerbose('starting Bort-EasyMode network setup');
     mainWindow = new BrowserWindow({
         // icon: path.join(assetsPath, 'assets', 'icon.png'),
-        title: 'DCS-BIOS Easy Mode Reference Tool',
+        title: 'DCS-BIOS EasyMode Reference Tool',
         width: 900,
         height: 1200,
         minWidth: 500,
@@ -257,7 +257,7 @@ function createWindow() {
                         const packageInfo = require('../package.json');
                         dialog
                             .showMessageBox({
-                                message: `Bort-EasyMode version: ${ packageInfo.version }`
+                                message: `Bort-EasyMode version: ${packageInfo.version}`,
                             })
                             // should always handle the error yourself, later Electron release might crash if you don't
                             .catch(function (err) {

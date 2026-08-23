@@ -10,4 +10,5 @@ export interface IntegerSnippetProps {
     showEasyStepper28Byj48Data: boolean;
     showAdvancedCodeSnippets: boolean;
     useAddressConstants: boolean;
+    scaffoldingMode: string;
 }

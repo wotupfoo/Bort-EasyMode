@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import SnippetGroupHeading from '../../SnippetGroupHeading/SnippetGroupHeading';
 import OutputSnippetBlock from '../OutputSnippetBlock';
 import EasyServoSg90Snippet from './EasyServoSg90Snippet/EasyServoSg90Snippet';
 import EasyServoSnippet from './EasyServoSnippet/EasyServoSnippet';
@@ -30,26 +31,26 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
             showEasyStepper28Byj48Data,
             showAdvancedCodeSnippets,
             useAddressConstants,
+            scaffoldingMode,
         } = this.props;
+        const showEasyMode = scaffoldingMode === 'easymode' || scaffoldingMode === 'both';
+        const showPassThrough = scaffoldingMode === 'passthrough' || scaffoldingMode === 'both';
+        const hasEasyModeSnippets =
+            showEasyMode &&
+            output.max_value != 1 &&
+            (showEasyServoData || showEasyServoSg90Data || showEasyStepperData || showEasyStepper28Byj48Data);
+        let showedPassThroughHeading = false;
 
-        if (output.max_value == 1) {
-            // On/Off
+        if (hasEasyModeSnippets) {
             yield (
-                <LedSnippet
-                    moduleName={moduleName}
-                    controlIdentifier={controlIdentifier}
-                    output={output}
-                    showEasyServoData={showEasyServoData}
-                    showEasyServoSg90Data={showEasyServoSg90Data}
-                    showEasyStepperData={showEasyStepperData}
-                    showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
-                    useAddressConstants={useAddressConstants}
-                    key={'led-snippet'}
-                />
+                <SnippetGroupHeading key={'easymode-heading'} title={'DCS-BIOS EasyMode Snippets'}>
+                    Recommended for EasyMode sketches. Includes easier to use devices, with real-world parameters and
+                    additional EasyMode features.
+                </SnippetGroupHeading>
             );
-        } else if (output.max_value == 65535) {
-            // Full-range 16-bit input. This can still drive bounded hardware such as servos.
+        }
+
+        if (showEasyMode && output.max_value == 65535) {
             if (showEasyServoSg90Data) {
                 yield (
                     <EasyServoSg90Snippet
@@ -114,22 +115,7 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
                     />
                 );
             }
-            yield (
-                <ServoSnippet
-                    moduleName={moduleName}
-                    controlIdentifier={controlIdentifier}
-                    output={output}
-                    showEasyServoData={showEasyServoData}
-                    showEasyServoSg90Data={showEasyServoSg90Data}
-                    showEasyStepperData={showEasyStepperData}
-                    showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
-                    useAddressConstants={useAddressConstants}
-                    key={'servo-snippet'}
-                />
-            );
-        } else {
-            // Bounded angle-like telemetry. eg Compass output.max_value == 360
+        } else if (showEasyMode && output.max_value != 1) {
             if (showEasyServoSg90Data) {
                 yield (
                     <EasyServoSg90Snippet
@@ -194,26 +180,58 @@ export default class IntegerSnippetBlock extends Component<IntegerSnippetProps> 
                     />
                 );
             }
-            // DCS-BIOS Servo
-            yield (
-                <ServoSnippet
-                    moduleName={moduleName}
-                    controlIdentifier={controlIdentifier}
-                    output={output}
-                    showEasyServoData={showEasyServoData}
-                    showEasyServoSg90Data={showEasyServoSg90Data}
-                    showEasyStepperData={showEasyStepperData}
-                    showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
-                    showAdvancedCodeSnippets={showAdvancedCodeSnippets}
-                    useAddressConstants={useAddressConstants}
-                    key={'servo-snippet'}
-                />
-            );
-
         }
 
-        // Advanced code snippet
-        if (showAdvancedCodeSnippets) {
+        if (showPassThrough) {
+            showedPassThroughHeading = true;
+            yield (
+                <SnippetGroupHeading key={'pass-through-heading'} title={'DCS-BIOS Pass-Through Snippets'}>
+                    Lower-level snippets that expose the original DCS-BIOS inputs and outputs. Use these when they work
+                    great already and you don't need any of the new features the EasyMode snippets give you.
+                </SnippetGroupHeading>
+            );
+            if (output.max_value == 1) {
+                yield (
+                    <LedSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'led-snippet'}
+                    />
+                );
+            } else {
+                yield (
+                    <ServoSnippet
+                        moduleName={moduleName}
+                        controlIdentifier={controlIdentifier}
+                        output={output}
+                        showEasyServoData={showEasyServoData}
+                        showEasyServoSg90Data={showEasyServoSg90Data}
+                        showEasyStepperData={showEasyStepperData}
+                        showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
+                        showAdvancedCodeSnippets={showAdvancedCodeSnippets}
+                        useAddressConstants={useAddressConstants}
+                        key={'servo-snippet'}
+                    />
+                );
+            }
+        }
+
+        if (showPassThrough && showAdvancedCodeSnippets) {
+            if (!showedPassThroughHeading) {
+                yield (
+                    <SnippetGroupHeading key={'pass-through-heading'} title={'DCS-BIOS Pass-Through Snippets'}>
+                        Lower-level snippets that expose the original DCS-BIOS inputs and outputs. Use these when they
+                        work great already and you don't need any of the new features the EasyMode snippets give you.
+                    </SnippetGroupHeading>
+                );
+            }
             yield (
                 <IntegerBufferSnippet
                     moduleName={moduleName}

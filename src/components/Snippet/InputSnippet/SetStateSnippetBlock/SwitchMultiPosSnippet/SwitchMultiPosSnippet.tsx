@@ -1,5 +1,6 @@
 import { Component, ReactNode } from 'react';
 
+import FeatureSnippet from '../../../FeatureSnippet/FeatureSnippet';
 import Snippet from '../../../Snippet';
 import Variable from '../../../Variable/Variable';
 
@@ -20,7 +21,7 @@ export default class SwitchMultiPosSnippet extends Component<SwitchMultiPosSnipp
         ]);
 
         return (
-            <Snippet>
+            <FeatureSnippet features={['DCS synchronization with periodic refresh']}>
                 const byte {pinArrayName}[{pinArraySize}] = &#123;{pinArray}&#125;;
                 <br />
                 DcsBios::EasyMode::SwitchMultiPos {methodName}(
@@ -32,7 +33,7 @@ export default class SwitchMultiPosSnippet extends Component<SwitchMultiPosSnipp
                 {', // Array of Arduino pins, one for each switch position\n    '}
                 {pinArraySize}
                 {'                 // Number of entries in the pin array\n);'}
-            </Snippet>
+            </FeatureSnippet>
         );
     }
 }

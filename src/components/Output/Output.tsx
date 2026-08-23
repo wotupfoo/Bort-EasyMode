@@ -13,7 +13,7 @@ export interface OutputProps {
     identifier: string;
     output: OutputItem;
     showLiveData: boolean;
-    showArduinoData: boolean;
+    scaffoldingMode: string;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -62,6 +62,7 @@ export default class Output extends Component<OutputProps> {
             showEasyStepper28Byj48Data,
             showAdvancedCodeSnippets,
             useAddressConstants,
+            scaffoldingMode,
         } = this.props;
         switch (output.type) {
             case OutputType.INTEGER:
@@ -76,6 +77,7 @@ export default class Output extends Component<OutputProps> {
                         showEasyStepper28Byj48Data={showEasyStepper28Byj48Data}
                         showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                         useAddressConstants={useAddressConstants}
+                        scaffoldingMode={scaffoldingMode}
                     />
                 );
             case OutputType.STRING:
@@ -85,6 +87,7 @@ export default class Output extends Component<OutputProps> {
                         output={output}
                         showAdvancedCodeSnippets={showAdvancedCodeSnippets}
                         useAddressConstants={useAddressConstants}
+                        scaffoldingMode={scaffoldingMode}
                     />
                 );
         }
@@ -93,9 +96,29 @@ export default class Output extends Component<OutputProps> {
 
         return <></>;
     }
-
     public render(): ReactNode {
-        const { output, showLiveData, showArduinoData, color } = this.props;
+        const {
+            output,
+            showLiveData,
+            scaffoldingMode,
+            color,
+            showEasyServoData,
+            showEasyServoSg90Data,
+            showEasyStepperData,
+            showEasyStepper28Byj48Data,
+        } = this.props;
+        const integerHasEasyModeSnippet =
+            output.type === OutputType.INTEGER &&
+            output.max_value != 1 &&
+            (showEasyServoData || showEasyServoSg90Data || showEasyStepperData || showEasyStepper28Byj48Data);
+        const integerHasPassThroughSnippet = output.type === OutputType.INTEGER;
+        const stringHasPassThroughSnippet = output.type === OutputType.STRING;
+        const hasScaffoldingSnippet =
+            (scaffoldingMode === 'easymode' && integerHasEasyModeSnippet) ||
+            (scaffoldingMode === 'passthrough' && (integerHasPassThroughSnippet || stringHasPassThroughSnippet)) ||
+            (scaffoldingMode === 'both' &&
+                (integerHasEasyModeSnippet || integerHasPassThroughSnippet || stringHasPassThroughSnippet));
+
         return (
             <Grid
                 container
@@ -159,14 +182,14 @@ export default class Output extends Component<OutputProps> {
                 ) : (
                     <></>
                 )}
-                {showLiveData && showArduinoData ? (
+                {showLiveData && hasScaffoldingSnippet ? (
                     <Grid item xs={12}>
                         <Divider sx={{ margin: '0.5rem 0' }} />
                     </Grid>
                 ) : (
                     <></>
                 )}
-                {showArduinoData ? (
+                {hasScaffoldingSnippet ? (
                     <Grid container item xs={12}>
                         {this.snippetForInterface()}
                     </Grid>

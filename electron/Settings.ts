@@ -5,7 +5,6 @@ interface SettingsSchema {
     theme: PaletteMode;
     jsonPath: string;
     showLiveData: boolean;
-    showArduinoData: boolean;
     showEasyServoData: boolean;
     showEasyServoSg90Data: boolean;
     showEasyStepperData: boolean;
@@ -31,7 +30,6 @@ export default class Settings {
                     (_, n) => process.env[n] ?? '',
                 ),
                 showLiveData: true,
-                showArduinoData: false,
                 showEasyServoData: false,
                 showEasyServoSg90Data: true,
                 showEasyStepperData: false,
@@ -66,16 +64,6 @@ export default class Settings {
     public set ShowLiveData(newValue: boolean) {
         this.store.set({
             showLiveData: newValue,
-        });
-    }
-
-    public get ShowArduinoData(): boolean {
-        return this.store.get('showArduinoData');
-    }
-
-    public set ShowArduinoData(newValue: boolean) {
-        this.store.set({
-            showArduinoData: newValue,
         });
     }
 
